@@ -112,7 +112,7 @@ You can decide if a tile is the first os the last in a timeline. This way you co
 
 ![First and last](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/first_and_last.png)
 
-[See the implementation here]
+See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_4.dart)
 
 ### Start to make a timeline
 
@@ -120,7 +120,7 @@ You can finally start to combine some tiles to make a Timeline. The flag `hasInd
 
 ![Timelien](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/start_to_make_timeline.png)
 
-[See the implementation here]
+See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_5.dart)
 
 ### Customize the indicator as you wish
 
@@ -128,7 +128,7 @@ The default indicator is a circle, and you can customize it as you wish. With `I
 
 ![Custom indicator](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/customize_indicator.png)
 
-[See the implementation here]
+See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_6.dart)
 
 ### Give an icon to the indicator
 
@@ -136,7 +136,7 @@ With `IconStyle` you can provide an Icon to be rendered inside the default indic
 
 ![Icon indicator](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/indicator_icon.png)
 
-[See the implementation here]
+See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_7.dart)
 
 ### Or provide your custom indicator
 
@@ -144,7 +144,7 @@ With the indicator parameter you can customize the tile with your own indicator.
 
 ![Custom indicator](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/custom_indicator.png)
 
-[See the implementation here]
+See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_8.dart)
 
 ### Customize the tile's line
 
@@ -152,7 +152,7 @@ With `LineStyle` you can customize both topLine and bottomLine.
 
 ![Custom line](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/custom_line.png)
 
-[See the implementation here]
+See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_9.dart)
 
 ### Connect tiles with TimelineDivider
 
@@ -160,4 +160,4 @@ The `TimelineDivider` widget allows you to connect tiles that are aligned in dif
 
 ![Timeline divider](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/timeline_divider.png)
 
-[See the implementation here]
+See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_10.dart)
