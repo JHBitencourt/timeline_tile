@@ -30,6 +30,9 @@
 .pub/
 build/
 
+# Since this is a package, no pubspec.lock
+pubspec.lock
+
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
