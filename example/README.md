@@ -13,4 +13,4 @@ This example will show you some of the possibilities while using `timeline_tile`
     </table>
 </div>
 
-Or try this web demo.
+Or try this [web demo](https://jhbitencourt.github.io/beautiful-timelines).

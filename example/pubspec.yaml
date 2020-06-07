@@ -12,10 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  timeline_tile: ^0.1.0
   google_fonts: ^1.1.0
   flutter_highlight: ^0.6.0
-  timeline_tile:
-    path: ../
 
 dev_dependencies:
   flutter_test:
