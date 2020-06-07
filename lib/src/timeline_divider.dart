@@ -15,12 +15,11 @@ class TimelineDivider extends StatelessWidget {
     this.begin = 0.0,
     this.end = 1.0,
     this.color = Colors.grey,
-  })
-      : assert(thickness >= 0.0, 'The thickness must be a positive value'),
+  })  : assert(thickness >= 0.0, 'The thickness must be a positive value'),
         assert(begin >= 0.0 && begin <= 1.0,
-        'The begin value must be between 0.0 and 1.0'),
+            'The begin value must be between 0.0 and 1.0'),
         assert(end >= 0.0 && end <= 1.0,
-        'The end value must be between 0.0 and 1.0'),
+            'The end value must be between 0.0 and 1.0'),
         assert(end > begin, 'The end value must be bigger than the begin'),
         super(key: key);
 

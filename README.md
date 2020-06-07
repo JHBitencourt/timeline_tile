@@ -7,8 +7,8 @@ A package to help build customisable timelines in Flutter.
 ## Example
 
 - You can access the [example](https://github.com/JHBitencourt/timeline_tile/tree/master/example) project for a Timeline Showcase.
-- The [Beautiful Timelines]() contains real world design examples.
-- Or try the [web demo]()
+- The [Beautiful Timelines](https://github.com/JHBitencourt/beautiful_timelines) contains real world design examples.
+- Or try the [web demo](https://jhbitencourt.github.io/beautiful-timelines)
 
 Some use cases:
 
