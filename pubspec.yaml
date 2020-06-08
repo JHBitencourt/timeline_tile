@@ -1,6 +1,6 @@
 name: timeline_tile
 description: A package to help you build highly customisable timelines with Flutter.
-version: 0.1.1
+version: 0.1.2
 author: Julio Bitencourt <julio.henrique.b@gmail.com>
 repository: https://github.com/JHBitencourt/timeline_tile
 homepage: https://github.com/JHBitencourt/timeline_tile
