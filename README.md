@@ -118,7 +118,7 @@ See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob
 
 You can finally start to combine some tiles to make a Timeline. The flag `hasIndicator` can control whether an indicator should or shouldn't be rendered.
 
-![Timelien](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/start_to_make_timeline.png)
+![Timeline](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/start_to_make_timeline.png)
 
 See the implementation [here](https://github.com/JHBitencourt/timeline_tile/blob/master/example/lib/src/example/example_5.dart)
 
