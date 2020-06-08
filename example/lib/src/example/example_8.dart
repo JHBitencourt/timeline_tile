@@ -29,7 +29,7 @@ class Example8 extends StatelessWidget {
               width: 40,
               height: 60,
               padding: const EdgeInsets.all(8),
-              indicator: Image.asset('assets/example/hitchhiker_2.png'),
+              indicator: Image.asset('assets/hitchhiker_2.png'),
             ),
             leftChild: const _Child(
               text: "Don't Panic!",
@@ -76,7 +76,7 @@ class Example8 extends StatelessWidget {
               width: 40,
               height: 40,
               padding: const EdgeInsets.all(8),
-              indicator: Image.asset('assets/example/hitchhiker.png'),
+              indicator: Image.asset('assets/hitchhiker.png'),
             ),
             leftChild: const _Child(
               text: 'for all the fish !',
