@@ -237,9 +237,9 @@ class _Indicator extends StatelessWidget {
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final indicatorY = constraints.maxHeight * indicatorStyle.indicatorY;
-          final topPadding = indicatorY - (indicatorStyle.height / 2);
-          final bottomPadding = (constraints.maxHeight - indicatorY) -
-              (indicatorStyle.height / 2);
+          final topPadding = indicatorY - indicatorStyle.height;
+          final bottomPadding =
+              constraints.maxHeight - indicatorY - indicatorStyle.height;
 
           return Padding(
             padding: EdgeInsets.only(
