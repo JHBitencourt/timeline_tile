@@ -44,6 +44,12 @@ class IndicatorStyle {
   /// If the line must not be drawn behind the icon. If true, there will be a gap
   /// even if the vertical padding is 0. It defaults to false.
   final bool drawGap;
+
+  /// The total indicator height, including padding.
+  double get totalHeight => height + padding.top + padding.bottom;
+
+  /// The total indicator width, including padding.
+  double get totalWidth => width + padding.left + padding.right;
 }
 
 /// Used to customize the icon used with the default indicator.

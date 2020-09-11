@@ -397,14 +397,170 @@ void main() {
   }
 
   testWidgets(
-    'GoldenTest - Timeline with custom top line, bbottom line and gap',
+    'GoldenTest - Timeline with custom top line, bottom line and gap',
     (WidgetTester tester) async {
       final widget = buildTimelineWithCustomTopLineAndBottomLineAndGap();
       await tester.pumpWidget(widget);
 
       await expectLater(
         find.byType(TimelineTile),
-        matchesGoldenFile('golden/timelineWithCustomTopLineAndBottomLineAndGap.png'),
+        matchesGoldenFile(
+            'golden/timelineWithCustomTopLineAndBottomLineAndGap.png'),
+      );
+    },
+  );
+
+  Widget buildTimelineWithCustomIndicatorExceedingTileSize() {
+    return buildTimelineTile(
+      TimelineTile(
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          width: 40,
+          height: 120,
+          indicator: Container(
+            color: Colors.orange,
+            child: Center(
+              child: Container(
+                height: 110,
+                width: 20,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.all(8),
+        ),
+        isLast: true,
+        rightChild: Container(
+          constraints: const BoxConstraints.tightFor(height: 100),
+          color: Colors.green,
+        ),
+        leftChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Timeline with custom indicator exceeding tile size',
+    (WidgetTester tester) async {
+      final widget = buildTimelineWithCustomIndicatorExceedingTileSize();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/timelineWithCustomIndicatorExceedingTileSize.png'),
+      );
+    },
+  );
+
+  Widget buildTimelineWithCustomIndicatorExceedingSizeAtTheBottom() {
+    return buildTimelineTile(
+      TimelineTile(
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          width: 40,
+          height: 40,
+          indicatorY: 1,
+          indicator: Container(
+            color: Colors.orange,
+            child: Center(
+              child: Container(
+                height: 40,
+                width: 40,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.all(8),
+        ),
+        isLast: true,
+        rightChild: Container(
+          constraints: const BoxConstraints.tightFor(height: 100),
+          color: Colors.green,
+        ),
+        leftChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Timeline with custom indicator exceeding size at the bottom',
+    (WidgetTester tester) async {
+      final widget = buildTimelineWithCustomIndicatorExceedingSizeAtTheBottom();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/timelineWithCustomIndicatorExceedingSizeAtTheBottom.png'),
+      );
+    },
+  );
+
+  Widget buildTimelineWithDefaultIndicatorExceedingSizeAtTheBottom() {
+    return buildTimelineTile(
+      TimelineTile(
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          width: 40,
+          height: 40,
+          indicatorY: 1,
+          padding: EdgeInsets.all(8),
+        ),
+        isLast: true,
+        rightChild: Container(
+          constraints: const BoxConstraints.tightFor(height: 100),
+          color: Colors.green,
+        ),
+        leftChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Timeline with default indicator exceeding size at the bottom',
+    (WidgetTester tester) async {
+      final widget =
+          buildTimelineWithDefaultIndicatorExceedingSizeAtTheBottom();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/timelineWithDefaultIndicatorExceedingSizeAtTheBottom.png'),
+      );
+    },
+  );
+
+  Widget buildTimelineWithDefaultIndicatorExceedingTileSize() {
+    return buildTimelineTile(
+      TimelineTile(
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          width: 40,
+          height: 120,
+          padding: EdgeInsets.all(8),
+        ),
+        isLast: true,
+        rightChild: Container(
+          constraints: const BoxConstraints.tightFor(height: 100),
+          color: Colors.green,
+        ),
+        leftChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Timeline with default indicator exceeding tile size',
+    (WidgetTester tester) async {
+      final widget = buildTimelineWithDefaultIndicatorExceedingTileSize();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/timelineWithDefaultIndicatorExceedingTileSize.png'),
       );
     },
   );

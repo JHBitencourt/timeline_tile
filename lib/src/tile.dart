@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:timeline_tile/src/axis.dart';
 import 'package:timeline_tile/src/style.dart';
 
 /// The alignment used on the [TimelineTile].
@@ -112,45 +113,32 @@ class TimelineTile extends StatelessWidget {
         } else {
           final double indicatorAxisX =
               alignment == TimelineAlign.center ? 0.5 : lineX;
-
-          final tileWidth = constraints.maxWidth;
-          var indicatorTotalSize = indicatorStyle.padding.left +
+          final indicatorTotalSize = indicatorStyle.padding.left +
               indicatorStyle.padding.right +
               (hasIndicator
                   ? indicatorStyle.width
                   : max(topLineStyle.width, bottomLineStyle.width));
 
-          final indicatorCenterX = tileWidth * indicatorAxisX;
-          final halfIndicator = indicatorTotalSize / 2;
-          var leftSize = indicatorCenterX - halfIndicator;
-          var rightSize = (tileWidth - indicatorCenterX) - halfIndicator;
+          final positioning = calculateAxisPositioning(
+            totalSize: constraints.maxWidth,
+            objectSize: indicatorTotalSize,
+            axisPosition: indicatorAxisX,
+          );
 
-          if (indicatorTotalSize > tileWidth) {
-            indicatorTotalSize = tileWidth;
-            leftSize = 0;
-            rightSize = 0;
-          } else if (leftSize < 0) {
-            leftSize = 0;
-            rightSize = tileWidth - indicatorTotalSize;
-          } else if (rightSize < 0) {
-            rightSize = 0;
-            leftSize = tileWidth - indicatorTotalSize;
-          }
-
-          if (leftSize > 0) {
+          if (positioning.firstSpace.size > 0) {
             children.insert(
               0,
               SizedBox(
-                width: leftSize,
+                width: positioning.firstSpace.size,
                 child: leftChild ?? defaultChild,
               ),
             );
           }
 
-          if (rightSize > 0) {
+          if (positioning.secondSpace.size > 0) {
             children.add(
               SizedBox(
-                width: rightSize,
+                width: positioning.secondSpace.size,
                 child: rightChild ?? defaultChild,
               ),
             );
@@ -236,20 +224,27 @@ class _Indicator extends StatelessWidget {
     return Positioned.fill(
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final indicatorY = constraints.maxHeight * indicatorStyle.indicatorY;
-          final topPadding = indicatorY - (indicatorStyle.height / 2);
-          final bottomPadding = (constraints.maxHeight - indicatorY) -
-              (indicatorStyle.height / 2);
+          final positioning = calculateAxisPositioning(
+            totalSize: constraints.maxHeight,
+            objectSize: indicatorStyle.totalHeight,
+            axisPosition: indicatorStyle.indicatorY,
+          );
 
           return Padding(
             padding: EdgeInsets.only(
-              top: topPadding < 0 ? 0 : topPadding,
-              bottom: bottomPadding < 0 ? 0 : bottomPadding,
+              top: positioning.firstSpace.size,
+              bottom: positioning.secondSpace.size,
             ),
             child: SizedBox(
-              height: indicatorStyle.height,
+              height: positioning.objectSpace.size,
               width: indicatorStyle.width,
-              child: indicatorStyle.indicator,
+              child: Center(
+                child: SizedBox(
+                  height: indicatorStyle.height,
+                  width: indicatorStyle.width,
+                  child: indicatorStyle.indicator,
+                ),
+              ),
             ),
           );
         },
@@ -349,21 +344,27 @@ class _TimelinePainter extends CustomPainter {
     final hasGap = indicatorTopGap > 0 || indicatorBottomGap > 0 || drawGap;
 
     final centerWidth = size.width / 2;
-    final indicatorCenterY = size.height * indicatorY;
+    final indicatorTotalSize =
+        indicatorHeight + indicatorBottomGap + indicatorTopGap;
+    final position = calculateAxisPositioning(
+      totalSize: size.height,
+      objectSize: indicatorTotalSize,
+      axisPosition: indicatorY,
+    );
 
     if (!hasGap) {
-      _drawSingleLine(canvas, size, centerWidth, indicatorCenterY);
+      _drawSingleLine(canvas, centerWidth, position);
     } else {
       if (!isFirst) {
-        _drawTopLine(canvas, size, centerWidth, indicatorCenterY);
+        _drawTopLine(canvas, centerWidth, position);
       }
       if (!isLast) {
-        _drawBottomLine(canvas, size, centerWidth, indicatorCenterY);
+        _drawBottomLine(canvas, centerWidth, position);
       }
     }
 
     if (paintIndicator) {
-      final indicatorCenter = Offset(centerWidth, indicatorCenterY);
+      final indicatorCenter = Offset(centerWidth, position.objectSpace.center);
       canvas.drawCircle(indicatorCenter, indicatorRadius, indicatorPaint);
 
       if (iconData != null) {
@@ -380,7 +381,7 @@ class _TimelinePainter extends CustomPainter {
         builder.addText(String.fromCharCode(iconData.codePoint));
 
         final paragraph = builder.build();
-        paragraph.layout(const ui.ParagraphConstraints(width: 0));
+        paragraph.layout(const ui.ParagraphConstraints(width: 0.0));
 
         final halfIconSize = fontSize / 2;
         final offsetIcon = Offset(indicatorCenter.dx - halfIconSize,
@@ -396,29 +397,32 @@ class _TimelinePainter extends CustomPainter {
   }
 
   void _drawSingleLine(
-      Canvas canvas, Size size, double centerWidth, double indicatorCenterY) {
+      Canvas canvas, double centerWidth, AxisPosition position) {
     if (!isFirst) {
       final beginTopLine = Offset(centerWidth, 0);
-      final endTopLine = Offset(centerWidth, indicatorCenterY);
+      final endTopLine = Offset(
+        centerWidth,
+        paintIndicator ? position.objectSpace.center : position.firstSpace.end,
+      );
       canvas.drawLine(beginTopLine, endTopLine, topLinePaint);
     }
 
     if (!isLast) {
-      final beginBottomLine = Offset(centerWidth, indicatorCenterY);
-      final endBottomLine = Offset(centerWidth, size.height);
+      final beginBottomLine = Offset(
+        centerWidth,
+        paintIndicator ? position.objectSpace.center : position.objectSpace.end,
+      );
+      final endBottomLine = Offset(centerWidth, position.secondSpace.end);
       canvas.drawLine(beginBottomLine, endBottomLine, bottomLinePaint);
     }
   }
 
   void _drawTopLine(
-      Canvas canvas, Size size, double centerWidth, double indicatorCenterY) {
+      Canvas canvas, double centerWidth, AxisPosition position) {
     final beginTopLine = Offset(centerWidth, 0);
-    final endPlusGap =
-        indicatorCenterY - (indicatorHeight / 2) - indicatorTopGap;
-    final endTopLine = Offset(centerWidth, endPlusGap);
+    final endTopLine = Offset(centerWidth, position.firstSpace.end);
 
     final lineSize = endTopLine.dy;
-
     // if the line size is less or equal than 0, the line shouldn't be rendered
     if (lineSize > 0) {
       canvas.drawLine(beginTopLine, endTopLine, topLinePaint);
@@ -426,14 +430,11 @@ class _TimelinePainter extends CustomPainter {
   }
 
   void _drawBottomLine(
-      Canvas canvas, Size size, double centerWidth, double indicatorCenterY) {
-    final beginPlusGap =
-        indicatorCenterY + (indicatorHeight / 2) + indicatorBottomGap;
-    final beginBottomLine = Offset(centerWidth, beginPlusGap);
-    final endBottomLine = Offset(centerWidth, size.height);
+      Canvas canvas, double centerWidth, AxisPosition position) {
+    final beginBottomLine = Offset(centerWidth, position.secondSpace.start);
+    final endBottomLine = Offset(centerWidth, position.secondSpace.end);
 
     final lineSize = endBottomLine.dy - beginBottomLine.dy;
-
     // if the line size is less or equal than 0, the line shouldn't be rendered
     if (lineSize > 0) {
       canvas.drawLine(beginBottomLine, endBottomLine, bottomLinePaint);
