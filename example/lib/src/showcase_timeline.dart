@@ -50,26 +50,44 @@ class ShowcaseTimeline extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                      child: CustomScrollView(
-                    slivers: <Widget>[
-                      SliverList(
-                        delegate: SliverChildListDelegate(<Widget>[
-                          _Description(
-                            description: example.description,
-                            code: example.code,
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverList(
+                          delegate: SliverChildListDelegate(
+                            <Widget>[
+                              _Description(
+                                description: example.description,
+                                code: example.code,
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                'Vertical Axis:',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 24),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Result:',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 24),
+                        ),
+                        const SliverPadding(padding: EdgeInsets.only(top: 20)),
+                        example.childVertical,
+                        const SliverPadding(padding: EdgeInsets.only(top: 20)),
+                        SliverList(
+                          delegate: SliverChildListDelegate(
+                            <Widget>[
+                              const Text(
+                                'Horizontal Axis:',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 24),
+                              ),
+                            ],
                           ),
-                        ]),
-                      ),
-                      const SliverPadding(padding: EdgeInsets.only(top: 20)),
-                      example.child,
-                    ],
-                  ))
+                        ),
+                        const SliverPadding(padding: EdgeInsets.only(top: 20)),
+                        example.childHorizontal,
+                        const SliverPadding(padding: EdgeInsets.only(top: 40)),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -122,7 +140,6 @@ class _Description extends StatelessWidget {
               style: GoogleFonts.jura(fontSize: 18),
             ),
           ),
-          const SizedBox(height: 16),
           Theme(
             data: Theme.of(context).copyWith(
               accentColor: Colors.white,
@@ -178,12 +195,19 @@ class _Description extends StatelessWidget {
 }
 
 class Example {
-  const Example({this.name, this.description, this.code, this.child});
+  const Example({
+    this.name,
+    this.description,
+    this.code,
+    this.childHorizontal,
+    this.childVertical,
+  });
 
   final String name;
   final String description;
   final String code;
-  final Widget child;
+  final Widget childVertical;
+  final Widget childHorizontal;
 }
 
 const examples = <Example>[

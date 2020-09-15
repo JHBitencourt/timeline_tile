@@ -8,7 +8,6 @@ const example5 = Example(
   description: 'You can finally start to combine some tiles to make a Timeline.'
       ' The flag hasIndicator can control whether an indicator should or'
       " shouldn't be rendered.",
-  child: Example5(),
   code: '''
 return Container(
   color: Colors.white,
@@ -17,9 +16,9 @@ return Container(
     children: <Widget>[
       TimelineTile(
         alignment: TimelineAlign.manual,
-        lineX: 0.7,
+        lineXY: 0.7,
         isFirst: true,
-        leftChild: Container(
+        startChild: Container(
           constraints: const BoxConstraints(
             minHeight: 120,
           ),
@@ -28,21 +27,21 @@ return Container(
       ),
       TimelineTile(
         alignment: TimelineAlign.manual,
-        lineX: 0.7,
+        lineXY: 0.7,
         hasIndicator: false,
-        leftChild: Container(
+        startChild: Container(
           height: 50,
           color: Colors.purple,
         ),
-        rightChild: Container(
+        endChild: Container(
           color: Colors.cyan,
         ),
       ),
       TimelineTile(
         alignment: TimelineAlign.manual,
-        lineX: 0.7,
+        lineXY: 0.7,
         isLast: true,
-        rightChild: Container(
+        endChild: Container(
           constraints: const BoxConstraints(
             minHeight: 80,
           ),
@@ -52,10 +51,12 @@ return Container(
     ],
   ),
 );''',
+  childVertical: Example5Vertical(),
+  childHorizontal: Example5Horizontal(),
 );
 
-class Example5 extends StatelessWidget {
-  const Example5({Key key}) : super(key: key);
+class Example5Vertical extends StatelessWidget {
+  const Example5Vertical({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +70,9 @@ class Example5 extends StatelessWidget {
               children: <Widget>[
                 TimelineTile(
                   alignment: TimelineAlign.manual,
-                  lineX: 0.7,
+                  lineXY: 0.7,
                   isFirst: true,
-                  leftChild: Container(
+                  startChild: Container(
                     constraints: const BoxConstraints(
                       minHeight: 120,
                     ),
@@ -80,21 +81,21 @@ class Example5 extends StatelessWidget {
                 ),
                 TimelineTile(
                   alignment: TimelineAlign.manual,
-                  lineX: 0.7,
+                  lineXY: 0.7,
                   hasIndicator: false,
-                  leftChild: Container(
+                  startChild: Container(
                     height: 50,
                     color: Colors.purple,
                   ),
-                  rightChild: Container(
+                  endChild: Container(
                     color: Colors.cyan,
                   ),
                 ),
                 TimelineTile(
                   alignment: TimelineAlign.manual,
-                  lineX: 0.7,
+                  lineXY: 0.7,
                   isLast: true,
-                  rightChild: Container(
+                  endChild: Container(
                     constraints: const BoxConstraints(
                       minHeight: 80,
                     ),
@@ -102,6 +103,68 @@ class Example5 extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Example5Horizontal extends StatelessWidget {
+  const Example5Horizontal({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        <Widget>[
+          Center(
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 100),
+              color: Colors.white,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.manual,
+                    lineXY: 0.7,
+                    isFirst: true,
+                    startChild: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 120,
+                      ),
+                      color: Colors.amberAccent,
+                    ),
+                  ),
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.manual,
+                    lineXY: 0.7,
+                    hasIndicator: false,
+                    startChild: Container(
+                      width: 50,
+                      color: Colors.purple,
+                    ),
+                    endChild: Container(
+                      color: Colors.cyan,
+                    ),
+                  ),
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.manual,
+                    lineXY: 0.7,
+                    isLast: true,
+                    endChild: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 80,
+                      ),
+                      color: Colors.lightGreenAccent,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

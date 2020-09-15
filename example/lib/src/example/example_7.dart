@@ -7,7 +7,6 @@ const example7 = Example(
   name: 'Give an Icon to the indicator.',
   description: 'With IconStyle you can provide an Icon to be rendered inside '
       'the default indicator.',
-  child: Example7(),
   code: '''
 return Container(
   color: Colors.white,
@@ -26,7 +25,7 @@ return Container(
             iconData: Icons.insert_emoticon,
           ),
         ),
-        leftChild: Container(
+        startChild: Container(
           constraints: const BoxConstraints(
             minHeight: 120,
           ),
@@ -39,13 +38,13 @@ return Container(
         indicatorStyle: IndicatorStyle(
           width: 30,
           color: Colors.red,
-          indicatorY: 0.7,
+          indicatorXY: 0.7,
           iconStyle: IconStyle(
             color: Colors.white,
             iconData: Icons.thumb_up,
           ),
         ),
-        rightChild: Container(
+        endChild: Container(
           constraints: const BoxConstraints(
             minHeight: 80,
           ),
@@ -55,10 +54,12 @@ return Container(
     ],
   ),
 );''',
+  childVertical: Example7Vertical(),
+  childHorizontal: Example7Horizontal(),
 );
 
-class Example7 extends StatelessWidget {
-  const Example7({Key key}) : super(key: key);
+class Example7Vertical extends StatelessWidget {
+  const Example7Vertical({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +83,7 @@ class Example7 extends StatelessWidget {
                       iconData: Icons.insert_emoticon,
                     ),
                   ),
-                  leftChild: Container(
+                  startChild: Container(
                     constraints: const BoxConstraints(
                       minHeight: 120,
                     ),
@@ -95,13 +96,13 @@ class Example7 extends StatelessWidget {
                   indicatorStyle: IndicatorStyle(
                     width: 30,
                     color: Colors.red,
-                    indicatorY: 0.7,
+                    indicatorXY: 0.7,
                     iconStyle: IconStyle(
                       color: Colors.white,
                       iconData: Icons.thumb_up,
                     ),
                   ),
-                  rightChild: Container(
+                  endChild: Container(
                     constraints: const BoxConstraints(
                       minHeight: 80,
                     ),
@@ -109,6 +110,71 @@ class Example7 extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Example7Horizontal extends StatelessWidget {
+  const Example7Horizontal({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        <Widget>[
+          Center(
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 100),
+              color: Colors.white,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.center,
+                    isFirst: true,
+                    indicatorStyle: IndicatorStyle(
+                      height: 40,
+                      color: Colors.purple,
+                      padding: const EdgeInsets.all(8),
+                      iconStyle: IconStyle(
+                        color: Colors.white,
+                        iconData: Icons.insert_emoticon,
+                      ),
+                    ),
+                    startChild: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 120,
+                      ),
+                      color: Colors.amberAccent,
+                    ),
+                  ),
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.center,
+                    isLast: true,
+                    indicatorStyle: IndicatorStyle(
+                      height: 30,
+                      color: Colors.red,
+                      indicatorXY: 0.7,
+                      iconStyle: IconStyle(
+                        color: Colors.white,
+                        iconData: Icons.thumb_up,
+                      ),
+                    ),
+                    endChild: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 80,
+                      ),
+                      color: Colors.lightGreenAccent,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

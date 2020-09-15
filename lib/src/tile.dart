@@ -5,15 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:timeline_tile/src/axis.dart';
 import 'package:timeline_tile/src/style.dart';
 
+/// The axis used on the [TimelineTile].
+enum TimelineAxis {
+  /// Renders the tile in the [vertical] axis.
+  vertical,
+
+  /// Renders the tile in the [horizontal] axis.
+  horizontal,
+}
+
 /// The alignment used on the [TimelineTile].
 enum TimelineAlign {
-  /// Automatically align the line to the left, only the ([TimelineTile.rightChild])
-  /// will be available.
-  left,
+  /// Automatically align the line to the start according to [TimelineAxis],
+  /// only the ([TimelineTile.rightChild]) will be available.
+  start,
 
-  /// Automatically align the line to the right, only the ([TimelineTile.leftChild])
-  /// will be available.
-  right,
+  /// Automatically align the line to the end according to [TimelineAxis],
+  /// only the ([TimelineTile.leftChild]) will be available.
+  end,
 
   /// Automatically align the line to the center, both ([TimelineTile.leftChild])
   /// and ([TimelineTile.rightChild]) will be available.
@@ -29,108 +38,138 @@ enum TimelineAlign {
 class TimelineTile extends StatelessWidget {
   const TimelineTile({
     Key key,
-    this.alignment = TimelineAlign.left,
-    this.rightChild,
-    this.leftChild,
-    this.lineX,
+    this.axis = TimelineAxis.vertical,
+    this.alignment = TimelineAlign.start,
+    this.startChild,
+    this.endChild,
+    this.lineXY,
     this.hasIndicator = true,
     this.isFirst = false,
     this.isLast = false,
     this.indicatorStyle = const IndicatorStyle(width: 25),
-    this.topLineStyle = const LineStyle(),
-    LineStyle bottomLineStyle,
-  })  : bottomLineStyle = bottomLineStyle ?? topLineStyle,
-        assert(alignment != TimelineAlign.left || leftChild == null,
-            'Cannot provide leftChild with automatic alignment to the left'),
-        assert(alignment != TimelineAlign.right || rightChild == null,
-            'Cannot provide rightChild with automatic alignment to the right'),
+    this.beforeLineStyle = const LineStyle(),
+    LineStyle afterLineStyle,
+  })  : afterLineStyle = afterLineStyle ?? beforeLineStyle,
+        assert(alignment != TimelineAlign.start || startChild == null,
+            'Cannot provide startChild with automatic alignment to the left'),
+        assert(alignment != TimelineAlign.end || endChild == null,
+            'Cannot provide endChild with automatic alignment to the right'),
         assert(
             alignment != TimelineAlign.manual ||
-                (lineX != null && lineX >= 0.0 && lineX <= 1.0),
+                (lineXY != null && lineXY >= 0.0 && lineXY <= 1.0),
             'The lineX must be provided when aligning manually, '
             'and must be a value between 0.0 and 1.0 inclusive'),
         super(key: key);
 
+  /// The axis used on the tile. See [TimelineAxis].
+  /// It defaults to [TimelineAxis.vertical]
+  final TimelineAxis axis;
+
   /// The alignment used on the line. See [TimelineAlign].
+  /// It defaults to [TimelineAlign.start]
   final TimelineAlign alignment;
 
-  /// The child widget positioned at the right
-  final Widget rightChild;
+  /// The child widget positioned at the start
+  final Widget startChild;
 
-  /// The child widget positioned at the left
-  final Widget leftChild;
+  /// The child widget positioned at the end
+  final Widget endChild;
 
-  /// The X axis value used to position the line when [TimelineAlign.manual].
+  /// The X (in case of [TimelineAxis.vertical]) or Y (in case of [TimelineAxis.horizontal])
+  /// axis value used to position the line when [TimelineAlign.manual].
   /// Must be a value from 0.0 to 1.0
-  final double lineX;
+  final double lineXY;
 
   /// Whether it should have an indicator (default or custom).
   /// It defaults to true.
   final bool hasIndicator;
 
   /// Whether this is the first tile from the timeline.
-  /// In this case, it won't be rendered a line above the indicator.
+  /// In this case, it won't be rendered a line before the indicator.
   final bool isFirst;
 
   /// Whether this is the last tile from the timeline.
-  /// In this case, it won't be rendered a line bellow the indicator.
+  /// In this case, it won't be rendered a line after the indicator.
   final bool isLast;
 
   /// The style used to customize the indicator.
   final IndicatorStyle indicatorStyle;
 
-  /// The style used to customize the top line.
-  final LineStyle topLineStyle;
+  /// The style used to customize the line rendered before the indicator.
+  final LineStyle beforeLineStyle;
 
-  /// The style used to customize the bottom line.
+  /// The style used to customize the line rendered after the indicator.
   /// If null, it defaults to [topLineStyle].
-  final LineStyle bottomLineStyle;
+  final LineStyle afterLineStyle;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
+        double startCrossAxisSpace = 0;
+        double endCrossAxisSpace = 0;
+        if (axis == TimelineAxis.vertical) {
+          startCrossAxisSpace = indicatorStyle.padding.left;
+          endCrossAxisSpace = indicatorStyle.padding.right;
+        } else {
+          startCrossAxisSpace = indicatorStyle.padding.top;
+          endCrossAxisSpace = indicatorStyle.padding.bottom;
+        }
+
         final children = <Widget>[
-          if (indicatorStyle.padding.left > 0)
-            SizedBox(width: indicatorStyle.padding.left),
+          if (startCrossAxisSpace > 0)
+            SizedBox(
+              height:
+                  axis == TimelineAxis.vertical ? null : startCrossAxisSpace,
+              width: axis == TimelineAxis.vertical ? startCrossAxisSpace : null,
+            ),
           _Indicator(
-            topLineStyle: topLineStyle,
-            bottomLineStyle: bottomLineStyle ?? topLineStyle,
+            axis: axis,
+            beforeLineStyle: beforeLineStyle,
+            afterLineStyle: afterLineStyle ?? beforeLineStyle,
             indicatorStyle: indicatorStyle,
             hasIndicator: hasIndicator,
             isLast: isLast,
             isFirst: isFirst,
           ),
-          if (indicatorStyle.padding.right > 0)
-            SizedBox(width: indicatorStyle.padding.right),
+          if (endCrossAxisSpace > 0)
+            SizedBox(
+              height: axis == TimelineAxis.vertical ? null : endCrossAxisSpace,
+              width: axis == TimelineAxis.vertical ? endCrossAxisSpace : null,
+            ),
         ];
 
-        final defaultChild = Container(height: 100);
-        if (alignment == TimelineAlign.left) {
-          children.add(Expanded(child: rightChild ?? defaultChild));
-        } else if (alignment == TimelineAlign.right) {
-          children.insert(0, Expanded(child: leftChild ?? defaultChild));
+        final defaultChild = axis == TimelineAxis.vertical
+            ? Container(height: 100)
+            : Container(width: 100);
+        if (alignment == TimelineAlign.start) {
+          children.add(Expanded(child: endChild ?? defaultChild));
+        } else if (alignment == TimelineAlign.end) {
+          children.insert(0, Expanded(child: startChild ?? defaultChild));
         } else {
-          final double indicatorAxisX =
-              alignment == TimelineAlign.center ? 0.5 : lineX;
-          final indicatorTotalSize = indicatorStyle.padding.left +
-              indicatorStyle.padding.right +
-              (hasIndicator
-                  ? indicatorStyle.width
-                  : max(topLineStyle.width, bottomLineStyle.width));
+          final indicatorAxisXY =
+              alignment == TimelineAlign.center ? 0.5 : lineXY;
+          final indicatorTotalSize = _indicatorTotalSize();
 
           final positioning = calculateAxisPositioning(
-            totalSize: constraints.maxWidth,
+            totalSize: axis == TimelineAxis.vertical
+                ? constraints.maxWidth
+                : constraints.maxHeight,
             objectSize: indicatorTotalSize,
-            axisPosition: indicatorAxisX,
+            axisPosition: indicatorAxisXY,
           );
 
           if (positioning.firstSpace.size > 0) {
             children.insert(
               0,
               SizedBox(
-                width: positioning.firstSpace.size,
-                child: leftChild ?? defaultChild,
+                height: axis == TimelineAxis.horizontal
+                    ? positioning.firstSpace.size
+                    : null,
+                width: axis == TimelineAxis.vertical
+                    ? positioning.firstSpace.size
+                    : null,
+                child: startChild ?? defaultChild,
               ),
             );
           }
@@ -138,76 +177,118 @@ class TimelineTile extends StatelessWidget {
           if (positioning.secondSpace.size > 0) {
             children.add(
               SizedBox(
-                width: positioning.secondSpace.size,
-                child: rightChild ?? defaultChild,
+                height: axis == TimelineAxis.horizontal
+                    ? positioning.secondSpace.size
+                    : null,
+                width: axis == TimelineAxis.vertical
+                    ? positioning.secondSpace.size
+                    : null,
+                child: endChild ?? defaultChild,
               ),
             );
           }
         }
 
-        return IntrinsicHeight(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: children,
-          ),
-        );
+        return axis == TimelineAxis.vertical
+            ? IntrinsicHeight(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: children,
+                ),
+              )
+            : IntrinsicWidth(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: children,
+                ),
+              );
       },
     );
+  }
+
+  double _indicatorTotalSize() {
+    if (axis == TimelineAxis.vertical) {
+      return indicatorStyle.padding.left +
+          indicatorStyle.padding.right +
+          (hasIndicator
+              ? indicatorStyle.width
+              : max(beforeLineStyle.thickness, afterLineStyle.thickness));
+    }
+
+    return indicatorStyle.padding.top +
+        indicatorStyle.padding.bottom +
+        (hasIndicator
+            ? indicatorStyle.height
+            : max(beforeLineStyle.thickness, afterLineStyle.thickness));
   }
 }
 
 class _Indicator extends StatelessWidget {
   const _Indicator({
-    this.topLineStyle,
-    this.bottomLineStyle,
+    this.axis,
+    this.beforeLineStyle,
+    this.afterLineStyle,
     this.indicatorStyle,
     this.hasIndicator,
     this.isFirst,
     this.isLast,
   });
 
-  /// See [(TimelineTile.topLineStyle)]
-  final LineStyle topLineStyle;
+  /// See [TimelineTile.axis]
+  final TimelineAxis axis;
 
-  /// See [(TimelineTile.bottomLineStyle)]
-  final LineStyle bottomLineStyle;
+  /// See [TimelineTile.beforeLineStyle]
+  final LineStyle beforeLineStyle;
 
-  /// See [(TimelineTile.indicatorStyle)]
+  /// See [TimelineTile.afterLineStyle]
+  final LineStyle afterLineStyle;
+
+  /// See [TimelineTile.indicatorStyle]
   final IndicatorStyle indicatorStyle;
 
-  /// See [(TimelineTile.hasIndicator)]
+  /// See [TimelineTile.hasIndicator]
   final bool hasIndicator;
 
-  /// See [(TimelineTile.isFirst)]
+  /// See [TimelineTile.isFirst]
   final bool isFirst;
 
-  /// See [(TimelineTile.isLast)]
+  /// See [TimelineTile.isLast]
   final bool isLast;
 
   @override
   Widget build(BuildContext context) {
+    double size;
+    if (axis == TimelineAxis.vertical) {
+      size = hasIndicator
+          ? indicatorStyle.width
+          : max(beforeLineStyle.thickness, afterLineStyle.thickness);
+    } else {
+      size = hasIndicator
+          ? indicatorStyle.height
+          : max(beforeLineStyle.thickness, afterLineStyle.thickness);
+    }
+
     final childrenStack = <Widget>[
       SizedBox(
-        width: hasIndicator
-            ? indicatorStyle.width
-            : max(topLineStyle.width, bottomLineStyle.width),
-        height: double.infinity,
+        height: axis == TimelineAxis.vertical ? double.infinity : size,
+        width: axis == TimelineAxis.vertical ? size : double.infinity,
       )
     ];
 
-    final renderDefaultlIndicator =
+    final renderDefaultIndicator =
         hasIndicator && indicatorStyle.indicator == null;
-    if (!renderDefaultlIndicator) {
+    if (!renderDefaultIndicator) {
       childrenStack.add(
         _buildCustomIndicator(),
       );
     }
 
     final painter = _TimelinePainter(
-      topLineStyle: topLineStyle,
-      bottomLineStyle: bottomLineStyle,
+      axis: axis,
+      beforeLineStyle: beforeLineStyle,
+      afterLineStyle: afterLineStyle,
       indicatorStyle: indicatorStyle,
-      paintIndicator: renderDefaultlIndicator,
+      paintIndicator: renderDefaultIndicator,
       isFirst: isFirst,
       isLast: isLast,
     );
@@ -224,26 +305,47 @@ class _Indicator extends StatelessWidget {
     return Positioned.fill(
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final positioning = calculateAxisPositioning(
-            totalSize: constraints.maxHeight,
-            objectSize: indicatorStyle.totalHeight,
-            axisPosition: indicatorStyle.indicatorY,
-          );
+          AxisPosition position;
+          EdgeInsets spaceChildren;
+          EdgeInsets spacePadding;
+          if (axis == TimelineAxis.vertical) {
+            position = calculateAxisPositioning(
+              totalSize: constraints.maxHeight,
+              objectSize: indicatorStyle.totalHeight,
+              axisPosition: indicatorStyle.indicatorXY,
+            );
+            spaceChildren = EdgeInsets.only(
+              top: position.firstSpace.size,
+              bottom: position.secondSpace.size,
+            );
+            spacePadding = EdgeInsets.only(
+              top: indicatorStyle.padding.top,
+              bottom: indicatorStyle.padding.bottom,
+            );
+          } else {
+            position = calculateAxisPositioning(
+              totalSize: constraints.maxWidth,
+              objectSize: indicatorStyle.totalWidth,
+              axisPosition: indicatorStyle.indicatorXY,
+            );
+            spaceChildren = EdgeInsets.only(
+              left: position.firstSpace.size,
+              right: position.secondSpace.size,
+            );
+            spacePadding = EdgeInsets.only(
+              left: indicatorStyle.padding.left,
+              right: indicatorStyle.padding.right,
+            );
+          }
 
           return Padding(
-            padding: EdgeInsets.only(
-              top: positioning.firstSpace.size,
-              bottom: positioning.secondSpace.size,
-            ),
-            child: SizedBox(
-              height: positioning.objectSpace.size,
-              width: indicatorStyle.width,
-              child: Center(
-                child: SizedBox(
-                  height: indicatorStyle.height,
-                  width: indicatorStyle.width,
-                  child: indicatorStyle.indicator,
-                ),
+            padding: spaceChildren,
+            child: Padding(
+              padding: spacePadding,
+              child: SizedBox(
+                height: indicatorStyle.height,
+                width: indicatorStyle.width,
+                child: indicatorStyle.indicator,
               ),
             ),
           );
@@ -256,27 +358,39 @@ class _Indicator extends StatelessWidget {
 /// A custom painter that renders a line and an indicator
 class _TimelinePainter extends CustomPainter {
   _TimelinePainter({
+    this.axis,
     this.paintIndicator = true,
     this.isFirst = false,
     this.isLast = false,
     IndicatorStyle indicatorStyle,
-    LineStyle topLineStyle,
-    LineStyle bottomLineStyle,
-  })  : topLinePaint = Paint()
-          ..color = topLineStyle.color
-          ..strokeWidth = topLineStyle.width,
-        bottomLinePaint = Paint()
-          ..color = bottomLineStyle.color
-          ..strokeWidth = bottomLineStyle.width,
+    LineStyle beforeLineStyle,
+    LineStyle afterLineStyle,
+  })  : beforeLinePaint = Paint()
+          ..color = beforeLineStyle.color
+          ..strokeWidth = beforeLineStyle.thickness,
+        afterLinePaint = Paint()
+          ..color = afterLineStyle.color
+          ..strokeWidth = afterLineStyle.thickness,
         indicatorPaint =
             !paintIndicator ? null : (Paint()..color = indicatorStyle.color),
-        indicatorY = indicatorStyle.indicatorY,
-        indicatorRadius = indicatorStyle.width / 2,
-        indicatorHeight = paintIndicator
-            ? indicatorStyle.width
-            : (indicatorStyle.indicator != null ? indicatorStyle.height : 0),
-        indicatorTopGap = indicatorStyle.padding.top,
-        indicatorBottomGap = indicatorStyle.padding.bottom,
+        indicatorXY = indicatorStyle.indicatorXY,
+        indicatorSize = axis == TimelineAxis.vertical
+            ? (paintIndicator
+                ? indicatorStyle.width
+                : (indicatorStyle.indicator != null
+                    ? indicatorStyle.height
+                    : 0))
+            : (paintIndicator
+                ? indicatorStyle.height
+                : (indicatorStyle.indicator != null
+                    ? indicatorStyle.width
+                    : 0)),
+        indicatorStartGap = axis == TimelineAxis.vertical
+            ? indicatorStyle.padding.top
+            : indicatorStyle.padding.left,
+        indicatorEndGap = axis == TimelineAxis.vertical
+            ? indicatorStyle.padding.bottom
+            : indicatorStyle.padding.right,
         drawGap = indicatorStyle.drawGap,
         iconData = indicatorStyle.iconStyle != null
             ? indicatorStyle.iconStyle.iconData
@@ -288,29 +402,33 @@ class _TimelinePainter extends CustomPainter {
             ? indicatorStyle.iconStyle.fontSize
             : null;
 
+  /// The axis used to render the line at the [TimelineAxis.vertical]
+  /// or [TimelineAxis.horizontal].
+  final TimelineAxis axis;
+
   /// Value from 0.0 to 1.0 indicating the percentage in which the indicator
-  /// should be positioned on the line, starting from the top.
-  /// For example, 0.2 means 20% from top to bottom.
-  final double indicatorY;
+  /// should be positioned on the line, either on Y if [TimelineAxis.vertical]
+  /// or X if [TimelineAxis.horizontal].
+  /// For example, 0.2 means 20% from start to end. It defaults to 0.5.
+  final double indicatorXY;
 
   /// A gap/space between the line and the indicator
-  final double indicatorTopGap;
+  final double indicatorStartGap;
 
   /// A gap/space between the line and the indicator
-  final double indicatorBottomGap;
+  final double indicatorEndGap;
 
-  /// The radius from the default indicator
-  final double indicatorRadius;
-
-  /// The height from the indicator. If it is the default indicator, the height
-  /// will be equal to the width, the equivalent of the diameter of the circumference.
-  final double indicatorHeight;
+  /// The size from the indicator. If it is the default indicator, the height
+  /// will be equal to the width (when axis vertical), or the width will be
+  /// equal to the height (when axis horizontal), which is the equivalent of the
+  /// diameter of the circumference.
+  final double indicatorSize;
 
   /// Used to paint the top line
-  final Paint topLinePaint;
+  final Paint beforeLinePaint;
 
   /// Used to paint the bottom line
-  final Paint bottomLinePaint;
+  final Paint afterLinePaint;
 
   /// Used to paint the indicator
   final Paint indicatorPaint;
@@ -327,7 +445,7 @@ class _TimelinePainter extends CustomPainter {
   final bool isLast;
 
   /// If there must be a gap between the lines. The gap size will always be the
-  /// [indicatorHeight] + [indicatorTopGap] + [indicatorBottomGap].
+  /// [indicatorHeight] + [indicatorStartGap] + [indicatorEndGap].
   final bool drawGap;
 
   /// The icon rendered with the default indicator.
@@ -341,30 +459,38 @@ class _TimelinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final hasGap = indicatorTopGap > 0 || indicatorBottomGap > 0 || drawGap;
+    final hasGap = indicatorStartGap > 0 || indicatorEndGap > 0 || drawGap;
 
-    final centerWidth = size.width / 2;
+    final centerAxis =
+        axis == TimelineAxis.vertical ? size.width / 2 : size.height / 2;
     final indicatorTotalSize =
-        indicatorHeight + indicatorBottomGap + indicatorTopGap;
+        indicatorSize + indicatorEndGap + indicatorStartGap;
     final position = calculateAxisPositioning(
-      totalSize: size.height,
+      totalSize: axis == TimelineAxis.vertical ? size.height : size.width,
       objectSize: indicatorTotalSize,
-      axisPosition: indicatorY,
+      axisPosition: indicatorXY,
     );
 
     if (!hasGap) {
-      _drawSingleLine(canvas, centerWidth, position);
+      _drawSingleLine(canvas, centerAxis, position);
     } else {
       if (!isFirst) {
-        _drawTopLine(canvas, centerWidth, position);
+        _drawBeforeLine(canvas, centerAxis, position);
       }
       if (!isLast) {
-        _drawBottomLine(canvas, centerWidth, position);
+        _drawAfterLine(canvas, centerAxis, position);
       }
     }
 
     if (paintIndicator) {
-      final indicatorCenter = Offset(centerWidth, position.objectSpace.center);
+      final indicatorRadius =
+          (position.objectSpace.size - indicatorStartGap - indicatorEndGap) / 2;
+      final indicatorCenterPoint =
+          position.objectSpace.start + indicatorStartGap + indicatorRadius;
+
+      final indicatorCenter = axis == TimelineAxis.vertical
+          ? Offset(centerAxis, indicatorCenterPoint)
+          : Offset(indicatorCenterPoint, centerAxis);
       canvas.drawCircle(indicatorCenter, indicatorRadius, indicatorPaint);
 
       if (iconData != null) {
@@ -397,47 +523,79 @@ class _TimelinePainter extends CustomPainter {
   }
 
   void _drawSingleLine(
-      Canvas canvas, double centerWidth, AxisPosition position) {
+      Canvas canvas, double centerAxis, AxisPosition position) {
     if (!isFirst) {
-      final beginTopLine = Offset(centerWidth, 0);
-      final endTopLine = Offset(
-        centerWidth,
-        paintIndicator ? position.objectSpace.center : position.firstSpace.end,
-      );
-      canvas.drawLine(beginTopLine, endTopLine, topLinePaint);
+      final beginTopLine = axis == TimelineAxis.vertical
+          ? Offset(centerAxis, 0)
+          : Offset(0, centerAxis);
+      final endTopLine = axis == TimelineAxis.vertical
+          ? Offset(
+              centerAxis,
+              paintIndicator
+                  ? position.objectSpace.center
+                  : position.firstSpace.end,
+            )
+          : Offset(
+              paintIndicator
+                  ? position.objectSpace.center
+                  : position.firstSpace.end,
+              centerAxis,
+            );
+      canvas.drawLine(beginTopLine, endTopLine, beforeLinePaint);
     }
 
     if (!isLast) {
-      final beginBottomLine = Offset(
-        centerWidth,
-        paintIndicator ? position.objectSpace.center : position.objectSpace.end,
-      );
-      final endBottomLine = Offset(centerWidth, position.secondSpace.end);
-      canvas.drawLine(beginBottomLine, endBottomLine, bottomLinePaint);
+      final beginBottomLine = axis == TimelineAxis.vertical
+          ? Offset(
+              centerAxis,
+              paintIndicator
+                  ? position.objectSpace.center
+                  : position.objectSpace.end,
+            )
+          : Offset(
+              paintIndicator
+                  ? position.objectSpace.center
+                  : position.objectSpace.end,
+              centerAxis,
+            );
+      final endBottomLine = axis == TimelineAxis.vertical
+          ? Offset(centerAxis, position.secondSpace.end)
+          : Offset(position.secondSpace.end, centerAxis);
+      canvas.drawLine(beginBottomLine, endBottomLine, afterLinePaint);
     }
   }
 
-  void _drawTopLine(
-      Canvas canvas, double centerWidth, AxisPosition position) {
-    final beginTopLine = Offset(centerWidth, 0);
-    final endTopLine = Offset(centerWidth, position.firstSpace.end);
+  void _drawBeforeLine(
+      Canvas canvas, double centerAxis, AxisPosition position) {
+    final beginTopLine = axis == TimelineAxis.vertical
+        ? Offset(centerAxis, 0)
+        : Offset(0, centerAxis);
+    final endTopLine = axis == TimelineAxis.vertical
+        ? Offset(centerAxis, position.firstSpace.end)
+        : Offset(position.firstSpace.end, centerAxis);
 
-    final lineSize = endTopLine.dy;
+    final lineSize =
+        axis == TimelineAxis.vertical ? endTopLine.dy : endTopLine.dx;
     // if the line size is less or equal than 0, the line shouldn't be rendered
     if (lineSize > 0) {
-      canvas.drawLine(beginTopLine, endTopLine, topLinePaint);
+      canvas.drawLine(beginTopLine, endTopLine, beforeLinePaint);
     }
   }
 
-  void _drawBottomLine(
-      Canvas canvas, double centerWidth, AxisPosition position) {
-    final beginBottomLine = Offset(centerWidth, position.secondSpace.start);
-    final endBottomLine = Offset(centerWidth, position.secondSpace.end);
+  void _drawAfterLine(Canvas canvas, double centerAxis, AxisPosition position) {
+    final beginBottomLine = axis == TimelineAxis.vertical
+        ? Offset(centerAxis, position.secondSpace.start)
+        : Offset(position.secondSpace.start, centerAxis);
+    final endBottomLine = axis == TimelineAxis.vertical
+        ? Offset(centerAxis, position.secondSpace.end)
+        : Offset(position.secondSpace.end, centerAxis);
 
-    final lineSize = endBottomLine.dy - beginBottomLine.dy;
+    final lineSize = axis == TimelineAxis.vertical
+        ? endBottomLine.dy - beginBottomLine.dy
+        : endBottomLine.dx - beginBottomLine.dx;
     // if the line size is less or equal than 0, the line shouldn't be rendered
     if (lineSize > 0) {
-      canvas.drawLine(beginBottomLine, endBottomLine, bottomLinePaint);
+      canvas.drawLine(beginBottomLine, endBottomLine, afterLinePaint);
     }
   }
 }

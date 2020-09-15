@@ -6,31 +6,32 @@ import '../showcase_timeline.dart';
 const example3 = Example(
   name: 'Manual aligning the indicator',
   description:
-      'With TimelineAlign.manual you can provide the lineX, which allows you to'
-      'specify a value from 0.0 to 1.0, that represents a widht percentage. '
-      'For example, aligning at 30% of the widht:',
-  child: Example3(),
+      'With TimelineAlign.manual you can provide the lineXY, which allows you to'
+      'specify a value from 0.0 to 1.0, that represents a width/height percentage. '
+      'For example, aligning at 0.3(30%) of the width/height:',
   code: '''
 return Container(
   color: Colors.white,
   child: TimelineTile(
     alignment: TimelineAlign.manual,
-    lineX: 0.3,
-    rightChild: Container(
+    lineXY: 0.3,
+    startChild: Container(
       constraints: const BoxConstraints(
         minHeight: 120,
       ),
       color: Colors.lightGreenAccent,
     ),
-    leftChild: Container(
+    endChild: Container(
       color: Colors.amberAccent,
     ),
   ),
 );''',
+  childVertical: Example3Vertical(),
+  childHorizontal: Example3Horizontal(),
 );
 
-class Example3 extends StatelessWidget {
-  const Example3({Key key}) : super(key: key);
+class Example3Vertical extends StatelessWidget {
+  const Example3Vertical({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +42,53 @@ class Example3 extends StatelessWidget {
             color: Colors.white,
             child: TimelineTile(
               alignment: TimelineAlign.manual,
-              lineX: 0.3,
-              rightChild: Container(
+              lineXY: 0.3,
+              startChild: Container(
                 constraints: const BoxConstraints(
                   minHeight: 120,
                 ),
                 color: Colors.lightGreenAccent,
               ),
-              leftChild: Container(
+              endChild: Container(
                 color: Colors.amberAccent,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Example3Horizontal extends StatelessWidget {
+  const Example3Horizontal({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        <Widget>[
+          Row(
+            children: [
+              Container(
+                constraints: const BoxConstraints(maxHeight: 100),
+                color: Colors.white,
+                child: TimelineTile(
+                  axis: TimelineAxis.horizontal,
+                  alignment: TimelineAlign.manual,
+                  lineXY: 0.3,
+                  startChild: Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 120,
+                    ),
+                    color: Colors.lightGreenAccent,
+                  ),
+                  endChild: Container(
+                    color: Colors.amberAccent,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

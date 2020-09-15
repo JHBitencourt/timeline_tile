@@ -23,7 +23,7 @@ void main() {
       expect(
           timeline,
           isA<TimelineTile>().having(
-              (t) => t.alignment, 'Aligned to the left', TimelineAlign.left));
+              (t) => t.alignment, 'Aligned to the left', TimelineAlign.start));
       expect(
           timeline,
           isA<TimelineTile>()
@@ -44,7 +44,7 @@ void main() {
               'Default indicator with a grey color', Colors.grey));
       expect(
           timeline,
-          isA<TimelineTile>().having((t) => t.indicatorStyle.indicatorY,
+          isA<TimelineTile>().having((t) => t.indicatorStyle.indicatorXY,
               'Default indicator positioned at the y center', 0.5));
       expect(
           timeline,
@@ -58,11 +58,11 @@ void main() {
       /// The default line style
       expect(
           timeline,
-          isA<TimelineTile>().having((t) => t.topLineStyle.color,
+          isA<TimelineTile>().having((t) => t.beforeLineStyle.color,
               'Default line with a grey color', Colors.grey));
       expect(
           timeline,
-          isA<TimelineTile>().having((t) => t.topLineStyle.width,
+          isA<TimelineTile>().having((t) => t.beforeLineStyle.thickness,
               'Default indicator with a widht of 4', 4));
 
       final finderRow = find.byType(Row);
@@ -101,7 +101,7 @@ void main() {
           width: 25,
           padding: EdgeInsets.symmetric(horizontal: 10),
         ),
-        rightChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
       ),
     );
   }
@@ -124,12 +124,12 @@ void main() {
   Widget buildTimelineAlignedRightWithHorizontalPaddingAndGreenChild() {
     return buildTimelineTile(
       TimelineTile(
-        alignment: TimelineAlign.right,
+        alignment: TimelineAlign.end,
         indicatorStyle: const IndicatorStyle(
           width: 25,
           padding: EdgeInsets.symmetric(horizontal: 10),
         ),
-        leftChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -157,8 +157,8 @@ void main() {
           width: 25,
           padding: EdgeInsets.symmetric(horizontal: 10),
         ),
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -183,13 +183,13 @@ void main() {
     return buildTimelineTile(
       TimelineTile(
         alignment: TimelineAlign.manual,
-        lineX: 0.3,
+        lineXY: 0.3,
         indicatorStyle: const IndicatorStyle(
           width: 25,
           padding: EdgeInsets.symmetric(horizontal: 10),
         ),
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -217,11 +217,11 @@ void main() {
         indicatorStyle: const IndicatorStyle(
           width: 25,
           padding: EdgeInsets.all(4),
-          indicatorY: 0.7,
+          indicatorXY: 0.7,
         ),
         isFirst: true,
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -261,8 +261,8 @@ void main() {
           padding: const EdgeInsets.all(8),
         ),
         isLast: true,
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -291,8 +291,8 @@ void main() {
           padding: const EdgeInsets.all(8),
         ),
         isLast: true,
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -316,13 +316,13 @@ void main() {
     return buildTimelineTile(
       TimelineTile(
         alignment: TimelineAlign.center,
-        topLineStyle: const LineStyle(
+        beforeLineStyle: const LineStyle(
           color: Colors.lightBlue,
-          width: 8,
+          thickness: 8,
         ),
         hasIndicator: false,
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -345,17 +345,17 @@ void main() {
     return buildTimelineTile(
       TimelineTile(
         alignment: TimelineAlign.center,
-        topLineStyle: const LineStyle(
+        beforeLineStyle: const LineStyle(
           color: Colors.lightBlue,
-          width: 8,
+          thickness: 8,
         ),
-        bottomLineStyle: const LineStyle(
+        afterLineStyle: const LineStyle(
           color: Colors.orange,
-          width: 12,
+          thickness: 12,
         ),
         hasIndicator: false,
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -377,21 +377,21 @@ void main() {
     return buildTimelineTile(
       TimelineTile(
         alignment: TimelineAlign.center,
-        topLineStyle: const LineStyle(
+        beforeLineStyle: const LineStyle(
           color: Colors.lightBlue,
-          width: 8,
+          thickness: 8,
         ),
-        bottomLineStyle: const LineStyle(
+        afterLineStyle: const LineStyle(
           color: Colors.orange,
-          width: 12,
+          thickness: 12,
         ),
         indicatorStyle: const IndicatorStyle(
           width: 20,
           padding: EdgeInsets.only(top: 5, bottom: 10),
         ),
         hasIndicator: false,
-        rightChild: Container(color: Colors.green),
-        leftChild: Container(color: Colors.green),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -410,7 +410,7 @@ void main() {
     },
   );
 
-  Widget buildTimelineWithCustomIndicatorExceedingTileSize() {
+  Widget buildTimelineWithCustomIndicatorExceedingTileSizeWithPadding() {
     return buildTimelineTile(
       TimelineTile(
         alignment: TimelineAlign.center,
@@ -427,14 +427,14 @@ void main() {
               ),
             ),
           ),
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(top: 10, bottom: 4),
         ),
         isLast: true,
-        rightChild: Container(
+        endChild: Container(
           constraints: const BoxConstraints.tightFor(height: 100),
           color: Colors.green,
         ),
-        leftChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -442,13 +442,57 @@ void main() {
   testWidgets(
     'GoldenTest - Timeline with custom indicator exceeding tile size',
     (WidgetTester tester) async {
-      final widget = buildTimelineWithCustomIndicatorExceedingTileSize();
+      final widget =
+          buildTimelineWithCustomIndicatorExceedingTileSizeWithPadding();
       await tester.pumpWidget(widget);
 
       await expectLater(
         find.byType(TimelineTile),
         matchesGoldenFile(
-            'golden/timelineWithCustomIndicatorExceedingTileSize.png'),
+            'golden/timelineWithCustomIndicatorExceedingTileSizeWithPadding.png'),
+      );
+    },
+  );
+
+  Widget buildTimelineWithCustomIndicatorExceedingTileSizeWithoutPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          width: 40,
+          height: 120,
+          indicator: Container(
+            color: Colors.orange,
+            child: Center(
+              child: Container(
+                height: 110,
+                width: 20,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+        ),
+        isLast: true,
+        endChild: Container(
+          constraints: const BoxConstraints.tightFor(height: 100),
+          color: Colors.green,
+        ),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Timeline with custom indicator exceeding tile size',
+    (WidgetTester tester) async {
+      final widget =
+          buildTimelineWithCustomIndicatorExceedingTileSizeWithoutPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/timelineWithCustomIndicatorExceedingTileSizeWithoutPadding.png'),
       );
     },
   );
@@ -460,7 +504,7 @@ void main() {
         indicatorStyle: IndicatorStyle(
           width: 40,
           height: 40,
-          indicatorY: 1,
+          indicatorXY: 1,
           indicator: Container(
             color: Colors.orange,
             child: Center(
@@ -474,11 +518,11 @@ void main() {
           padding: const EdgeInsets.all(8),
         ),
         isLast: true,
-        rightChild: Container(
+        endChild: Container(
           constraints: const BoxConstraints.tightFor(height: 100),
           color: Colors.green,
         ),
-        leftChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -504,15 +548,15 @@ void main() {
         indicatorStyle: const IndicatorStyle(
           width: 40,
           height: 40,
-          indicatorY: 1,
+          indicatorXY: 1,
           padding: EdgeInsets.all(8),
         ),
         isLast: true,
-        rightChild: Container(
+        endChild: Container(
           constraints: const BoxConstraints.tightFor(height: 100),
           color: Colors.green,
         ),
-        leftChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -532,21 +576,21 @@ void main() {
     },
   );
 
-  Widget buildTimelineWithDefaultIndicatorExceedingTileSize() {
+  Widget buildTimelineWithDefaultIndicatorExceedingTileSizeWithPadding() {
     return buildTimelineTile(
       TimelineTile(
         alignment: TimelineAlign.center,
         indicatorStyle: const IndicatorStyle(
-          width: 40,
+          width: 120,
           height: 120,
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.only(top: 10, bottom: 4),
         ),
         isLast: true,
-        rightChild: Container(
+        endChild: Container(
           constraints: const BoxConstraints.tightFor(height: 100),
           color: Colors.green,
         ),
-        leftChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
       ),
     );
   }
@@ -554,13 +598,47 @@ void main() {
   testWidgets(
     'GoldenTest - Timeline with default indicator exceeding tile size',
     (WidgetTester tester) async {
-      final widget = buildTimelineWithDefaultIndicatorExceedingTileSize();
+      final widget =
+          buildTimelineWithDefaultIndicatorExceedingTileSizeWithPadding();
       await tester.pumpWidget(widget);
 
       await expectLater(
         find.byType(TimelineTile),
         matchesGoldenFile(
-            'golden/timelineWithDefaultIndicatorExceedingTileSize.png'),
+            'golden/timelineWithDefaultIndicatorExceedingTileSizeWithPadding.png'),
+      );
+    },
+  );
+
+  Widget buildTimelineWithDefaultIndicatorExceedingTileSizeWithoutPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          width: 120,
+          height: 120,
+        ),
+        isLast: true,
+        endChild: Container(
+          constraints: const BoxConstraints.tightFor(height: 100),
+          color: Colors.green,
+        ),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Timeline with default indicator exceeding tile size',
+    (WidgetTester tester) async {
+      final widget =
+          buildTimelineWithDefaultIndicatorExceedingTileSizeWithoutPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/timelineWithDefaultIndicatorExceedingTileSizeWithoutPadding.png'),
       );
     },
   );

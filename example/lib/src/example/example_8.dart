@@ -10,7 +10,6 @@ const example8 = Example(
       'With the indicator parameter you can customize the tile with your own '
       'indicator.\nHowever, you must control its size through both width and '
       'height parameters.',
-  child: Example8(),
   code: '''
 class Example8 extends StatelessWidget {
   const Example8({Key key}) : super(key: key);
@@ -23,7 +22,7 @@ class Example8 extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TimelineTile(
-            alignment: TimelineAlign.right,
+            alignment: TimelineAlign.end,
             isFirst: true,
             indicatorStyle: IndicatorStyle(
               width: 40,
@@ -31,13 +30,13 @@ class Example8 extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               indicator: Image.asset('assets/hitchhiker_2.png'),
             ),
-            leftChild: const _Child(
+            startChild: const _Child(
               text: "Don't Panic!",
               font: 'Bungee',
             ),
           ),
           TimelineTile(
-            alignment: TimelineAlign.right,
+            alignment: TimelineAlign.end,
             indicatorStyle: IndicatorStyle(
               width: 40,
               height: 40,
@@ -65,12 +64,12 @@ class Example8 extends StatelessWidget {
                 ),
               ),
             ),
-            leftChild: const _Child(
+            startChild: const _Child(
               text: 'So long, and thanks',
             ),
           ),
           TimelineTile(
-            alignment: TimelineAlign.right,
+            alignment: TimelineAlign.end,
             isLast: true,
             indicatorStyle: IndicatorStyle(
               width: 40,
@@ -78,7 +77,7 @@ class Example8 extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               indicator: Image.asset('assets/hitchhiker.png'),
             ),
-            leftChild: const _Child(
+            startChild: const _Child(
               text: 'for all the fish !',
             ),
           ),
@@ -118,10 +117,12 @@ class _Child extends StatelessWidget {
     );
   }
 };''',
+  childVertical: Example8Vertical(),
+  childHorizontal: Example8Horizontal(),
 );
 
-class Example8 extends StatelessWidget {
-  const Example8({Key key}) : super(key: key);
+class Example8Vertical extends StatelessWidget {
+  const Example8Vertical({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +135,7 @@ class Example8 extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TimelineTile(
-                  alignment: TimelineAlign.right,
+                  alignment: TimelineAlign.end,
                   isFirst: true,
                   indicatorStyle: IndicatorStyle(
                     width: 40,
@@ -142,13 +143,13 @@ class Example8 extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     indicator: Image.asset('assets/hitchhiker_2.png'),
                   ),
-                  leftChild: const _Child(
+                  startChild: const _Child(
                     text: "Don't Panic!",
                     font: 'Bungee',
                   ),
                 ),
                 TimelineTile(
-                  alignment: TimelineAlign.right,
+                  alignment: TimelineAlign.end,
                   indicatorStyle: IndicatorStyle(
                     width: 40,
                     height: 40,
@@ -176,12 +177,12 @@ class Example8 extends StatelessWidget {
                       ),
                     ),
                   ),
-                  leftChild: const _Child(
+                  startChild: const _Child(
                     text: 'So long, and thanks',
                   ),
                 ),
                 TimelineTile(
-                  alignment: TimelineAlign.right,
+                  alignment: TimelineAlign.end,
                   isLast: true,
                   indicatorStyle: IndicatorStyle(
                     width: 40,
@@ -189,7 +190,91 @@ class Example8 extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     indicator: Image.asset('assets/hitchhiker.png'),
                   ),
-                  leftChild: const _Child(
+                  startChild: const _Child(
+                    text: 'for all the fish !',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Example8Horizontal extends StatelessWidget {
+  const Example8Horizontal({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        <Widget>[
+          Container(
+            constraints: const BoxConstraints(maxHeight: 160),
+            color: Colors.white,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                TimelineTile(
+                  axis: TimelineAxis.horizontal,
+                  alignment: TimelineAlign.end,
+                  isFirst: true,
+                  indicatorStyle: IndicatorStyle(
+                    width: 40,
+                    height: 60,
+                    padding: const EdgeInsets.all(8),
+                    indicator: Image.asset('assets/hitchhiker_2.png'),
+                  ),
+                  startChild: const _Child(
+                    text: "Don't Panic!",
+                    font: 'Bungee',
+                  ),
+                ),
+                TimelineTile(
+                  axis: TimelineAxis.horizontal,
+                  alignment: TimelineAlign.end,
+                  indicatorStyle: IndicatorStyle(
+                    width: 40,
+                    height: 60,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    drawGap: true,
+                    indicator: Container(
+                      decoration: const BoxDecoration(
+                        border: Border.fromBorderSide(
+                          BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '42',
+                          style: TextStyle(
+                            color: Colors.deepOrange,
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  startChild: const _Child(
+                    text: 'So long, and thanks',
+                  ),
+                ),
+                TimelineTile(
+                  axis: TimelineAxis.horizontal,
+                  alignment: TimelineAlign.end,
+                  isLast: true,
+                  indicatorStyle: IndicatorStyle(
+                    width: 40,
+                    height: 60,
+                    padding: const EdgeInsets.all(8),
+                    indicator: Image.asset('assets/hitchhiker.png'),
+                  ),
+                  startChild: const _Child(
                     text: 'for all the fish !',
                   ),
                 ),
