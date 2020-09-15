@@ -78,14 +78,15 @@ void main() {
     },
   );
 
-  Widget buildTimelineTile(TimelineTile tile) {
+  Widget buildTimelineTile(TimelineTile tile,
+      {double width = 400, double height = 100}) {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Center(
         child: RepaintBoundary(
           child: Container(
-            width: 400,
-            height: 100,
+            width: width,
+            height: height,
             color: Colors.white,
             child: tile,
           ),
@@ -121,6 +122,34 @@ void main() {
     },
   );
 
+  Widget buildHorizontalTimelineAlignedStartWithVerticalPaddingAndGreenChild() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        indicatorStyle: const IndicatorStyle(
+          height: 25,
+          padding: EdgeInsets.symmetric(vertical: 10),
+        ),
+        endChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline aligned to the left with padding and green child',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineAlignedStartWithVerticalPaddingAndGreenChild();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineAlignedStartWithVerticalPaddingAndGreenChild.png'),
+      );
+    },
+  );
+
   Widget buildTimelineAlignedRightWithHorizontalPaddingAndGreenChild() {
     return buildTimelineTile(
       TimelineTile(
@@ -145,6 +174,35 @@ void main() {
         find.byType(TimelineTile),
         matchesGoldenFile(
             'golden/timelineAlignedRightWithHorizontalPaddingAndGreenChild.png'),
+      );
+    },
+  );
+
+  Widget buildHorizontalTimelineAlignedEndWithHorizontalPaddingAndGreenChild() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.end,
+        indicatorStyle: const IndicatorStyle(
+          height: 25,
+          padding: EdgeInsets.symmetric(vertical: 10),
+        ),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline aligned to the end with padding and green child',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineAlignedEndWithHorizontalPaddingAndGreenChild();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineAlignedEndWithHorizontalPaddingAndGreenChild.png'),
       );
     },
   );
@@ -174,6 +232,37 @@ void main() {
         find.byType(TimelineTile),
         matchesGoldenFile(
             'golden/timelineAlignedCenterWithHorizontalPaddingAndGreenChildren.png'),
+      );
+    },
+  );
+
+  Widget
+      buildHorizontalTimelineAlignedCenterWithVerticalPaddingAndGreenChildren() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          height: 25,
+          padding: EdgeInsets.symmetric(vertical: 10),
+        ),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline aligned to the center with padding and both children green',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineAlignedCenterWithVerticalPaddingAndGreenChildren();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineAlignedCenterWithVerticalPaddingAndGreenChildren.png'),
       );
     },
   );
@@ -210,6 +299,38 @@ void main() {
   );
 
   Widget
+      buildHorizontalTimelineAlignedManual30PercentWithVerticalPaddingAndGreenChildren() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.manual,
+        lineXY: 0.3,
+        indicatorStyle: const IndicatorStyle(
+          height: 25,
+          padding: EdgeInsets.symmetric(vertical: 10),
+        ),
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline aligned manual at 30% with padding and both children green',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineAlignedManual30PercentWithVerticalPaddingAndGreenChildren();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineAlignedManual30PercentWithVerticalPaddingAndGreenChildren.png'),
+      );
+    },
+  );
+
+  Widget
       buildTimelineFirstWithIndicatorAlignedAt70PercentYAndVerticalPadding() {
     return buildTimelineTile(
       TimelineTile(
@@ -237,6 +358,39 @@ void main() {
         find.byType(TimelineTile),
         matchesGoldenFile(
             'golden/timelineFirstWithIndicatorAlignedAt70PercentYAndVerticalPadding.png'),
+      );
+    },
+  );
+
+  Widget
+      buildHorizontalTimelineFirstWithIndicatorAlignedAt70PercentXAndHorizontalPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          height: 25,
+          padding: EdgeInsets.all(4),
+          indicatorXY: 0.7,
+        ),
+        isFirst: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline first with indicator aligned at 70% X and horizontal padding',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineFirstWithIndicatorAlignedAt70PercentXAndHorizontalPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineFirstWithIndicatorAlignedAt70PercentXAndHorizontalPadding.png'),
       );
     },
   );
@@ -281,6 +435,48 @@ void main() {
     },
   );
 
+  Widget buildHorizontalTimelineLastWithCustomIndicatorAndHorizontalPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          width: 40,
+          height: 40,
+          indicator: Container(
+            color: Colors.orange,
+            child: Center(
+              child: Container(
+                height: 20,
+                width: 20,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.all(8),
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline last with custom indicator and vertical padding',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineLastWithCustomIndicatorAndHorizontalPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineLastWithCustomIndicatorAndHorizontalPadding.png'),
+      );
+    },
+  );
+
   Widget buildTimelineFirstAndLastWithDefaultIconIndicator() {
     return buildTimelineTile(
       TimelineTile(
@@ -308,6 +504,39 @@ void main() {
         find.byType(TimelineTile),
         matchesGoldenFile(
             'golden/timelineFirstAndLastWithDefaultIconIndicator.png'),
+      );
+    },
+  );
+
+  Widget buildHorizontalTimelineFirstAndLastWithDefaultIconIndicator() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          height: 40,
+          iconStyle: IconStyle(iconData: Icons.close, color: Colors.blue),
+          padding: const EdgeInsets.all(8),
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline first and last with default icon indicator',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineFirstAndLastWithDefaultIconIndicator();
+      await tester.pumpWidget(widget);
+
+      /// Since golden images don't render texts, the result won't be accurate
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineFirstAndLastWithDefaultIconIndicator.png'),
       );
     },
   );
@@ -341,6 +570,37 @@ void main() {
     },
   );
 
+  Widget buildHorizontalTimelineWithCustomLineSizeAndColorWithoutIndicator() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        beforeLineStyle: const LineStyle(
+          color: Colors.lightBlue,
+          thickness: 8,
+        ),
+        hasIndicator: false,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with custom line size and color',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithCustomLineSizeAndColorWithoutIndicator();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithCustomLineSizeAndColorWithoutIndicator.png'),
+      );
+    },
+  );
+
   Widget buildTimelineWithCustomTopLineAndBottomLine() {
     return buildTimelineTile(
       TimelineTile(
@@ -369,6 +629,40 @@ void main() {
       await expectLater(
         find.byType(TimelineTile),
         matchesGoldenFile('golden/timelineWithCustomTopLineAndBottomLine.png'),
+      );
+    },
+  );
+
+  Widget buildHorizontalTimelineWithCustomBeforeLineAndAfterLine() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        beforeLineStyle: const LineStyle(
+          color: Colors.lightBlue,
+          thickness: 8,
+        ),
+        afterLineStyle: const LineStyle(
+          color: Colors.orange,
+          thickness: 12,
+        ),
+        hasIndicator: false,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with custom before and after lines',
+    (WidgetTester tester) async {
+      final widget = buildHorizontalTimelineWithCustomBeforeLineAndAfterLine();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithCustomBeforeLineAndAfterLine.png'),
       );
     },
   );
@@ -410,6 +704,45 @@ void main() {
     },
   );
 
+  Widget buildHorizontalTimelineWithCustomBeforeLineAndAfterLineAndGap() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        beforeLineStyle: const LineStyle(
+          color: Colors.lightBlue,
+          thickness: 8,
+        ),
+        afterLineStyle: const LineStyle(
+          color: Colors.orange,
+          thickness: 12,
+        ),
+        indicatorStyle: const IndicatorStyle(
+          height: 20,
+          padding: EdgeInsets.only(left: 5, right: 10),
+        ),
+        hasIndicator: false,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with custom before line, start line and gap',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithCustomBeforeLineAndAfterLineAndGap();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithCustomBeforeLineAndAfterLineAndGap.png'),
+      );
+    },
+  );
+
   Widget buildTimelineWithCustomIndicatorExceedingTileSizeWithPadding() {
     return buildTimelineTile(
       TimelineTile(
@@ -430,10 +763,7 @@ void main() {
           padding: const EdgeInsets.only(top: 10, bottom: 4),
         ),
         isLast: true,
-        endChild: Container(
-          constraints: const BoxConstraints.tightFor(height: 100),
-          color: Colors.green,
-        ),
+        endChild: Container(color: Colors.green),
         startChild: Container(color: Colors.green),
       ),
     );
@@ -450,6 +780,49 @@ void main() {
         find.byType(TimelineTile),
         matchesGoldenFile(
             'golden/timelineWithCustomIndicatorExceedingTileSizeWithPadding.png'),
+      );
+    },
+  );
+
+  Widget
+      buildHorizontalTimelineWithCustomIndicatorExceedingTileSizeWithPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          width: 420,
+          height: 40,
+          indicator: Container(
+            color: Colors.orange,
+            child: Center(
+              child: Container(
+                height: 20,
+                width: 410,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.only(left: 10, right: 4),
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with custom indicator exceeding tile size',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithCustomIndicatorExceedingTileSizeWithPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithCustomIndicatorExceedingTileSizeWithPadding.png'),
       );
     },
   );
@@ -473,10 +846,7 @@ void main() {
           ),
         ),
         isLast: true,
-        endChild: Container(
-          constraints: const BoxConstraints.tightFor(height: 100),
-          color: Colors.green,
-        ),
+        endChild: Container(color: Colors.green),
         startChild: Container(color: Colors.green),
       ),
     );
@@ -493,6 +863,48 @@ void main() {
         find.byType(TimelineTile),
         matchesGoldenFile(
             'golden/timelineWithCustomIndicatorExceedingTileSizeWithoutPadding.png'),
+      );
+    },
+  );
+
+  Widget
+      buildHorizontalTimelineWithCustomIndicatorExceedingTileSizeWithoutPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          width: 420,
+          height: 40,
+          indicator: Container(
+            color: Colors.orange,
+            child: Center(
+              child: Container(
+                height: 20,
+                width: 410,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with custom indicator exceeding tile size',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithCustomIndicatorExceedingTileSizeWithoutPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithCustomIndicatorExceedingTileSizeWithoutPadding.png'),
       );
     },
   );
@@ -518,10 +930,7 @@ void main() {
           padding: const EdgeInsets.all(8),
         ),
         isLast: true,
-        endChild: Container(
-          constraints: const BoxConstraints.tightFor(height: 100),
-          color: Colors.green,
-        ),
+        endChild: Container(color: Colors.green),
         startChild: Container(color: Colors.green),
       ),
     );
@@ -541,6 +950,49 @@ void main() {
     },
   );
 
+  Widget buildHorizontalTimelineWithCustomIndicatorExceedingSizeAtTheEnd() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: IndicatorStyle(
+          width: 40,
+          height: 40,
+          indicatorXY: 1,
+          indicator: Container(
+            color: Colors.orange,
+            child: Center(
+              child: Container(
+                height: 40,
+                width: 40,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.all(8),
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal Timeline with custom indicator exceeding size at the end',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithCustomIndicatorExceedingSizeAtTheEnd();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithCustomIndicatorExceedingSizeAtTheEnd.png'),
+      );
+    },
+  );
+
   Widget buildTimelineWithDefaultIndicatorExceedingSizeAtTheBottom() {
     return buildTimelineTile(
       TimelineTile(
@@ -552,10 +1004,7 @@ void main() {
           padding: EdgeInsets.all(8),
         ),
         isLast: true,
-        endChild: Container(
-          constraints: const BoxConstraints.tightFor(height: 100),
-          color: Colors.green,
-        ),
+        endChild: Container(color: Colors.green),
         startChild: Container(color: Colors.green),
       ),
     );
@@ -576,6 +1025,39 @@ void main() {
     },
   );
 
+  Widget buildHorizontalTimelineWithDefaultIndicatorExceedingSizeAtTheEnd() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          width: 40,
+          height: 40,
+          indicatorXY: 1,
+          padding: EdgeInsets.all(8),
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with default indicator exceeding size at the end',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithDefaultIndicatorExceedingSizeAtTheEnd();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithDefaultIndicatorExceedingSizeAtTheEnd.png'),
+      );
+    },
+  );
+
   Widget buildTimelineWithDefaultIndicatorExceedingTileSizeWithPadding() {
     return buildTimelineTile(
       TimelineTile(
@@ -586,10 +1068,7 @@ void main() {
           padding: EdgeInsets.only(top: 10, bottom: 4),
         ),
         isLast: true,
-        endChild: Container(
-          constraints: const BoxConstraints.tightFor(height: 100),
-          color: Colors.green,
-        ),
+        endChild: Container(color: Colors.green),
         startChild: Container(color: Colors.green),
       ),
     );
@@ -610,6 +1089,41 @@ void main() {
     },
   );
 
+  Widget
+      buildHorizontalTimelineWithDefaultIndicatorExceedingTileSizeWithPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          width: 120,
+          height: 120,
+          padding: EdgeInsets.only(left: 10, right: 4),
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+      width: 100,
+      height: 400,
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with default indicator exceeding tile size',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithDefaultIndicatorExceedingTileSizeWithPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithDefaultIndicatorExceedingTileSizeWithPadding.png'),
+      );
+    },
+  );
+
   Widget buildTimelineWithDefaultIndicatorExceedingTileSizeWithoutPadding() {
     return buildTimelineTile(
       TimelineTile(
@@ -619,10 +1133,7 @@ void main() {
           height: 120,
         ),
         isLast: true,
-        endChild: Container(
-          constraints: const BoxConstraints.tightFor(height: 100),
-          color: Colors.green,
-        ),
+        endChild: Container(color: Colors.green),
         startChild: Container(color: Colors.green),
       ),
     );
@@ -639,6 +1150,40 @@ void main() {
         find.byType(TimelineTile),
         matchesGoldenFile(
             'golden/timelineWithDefaultIndicatorExceedingTileSizeWithoutPadding.png'),
+      );
+    },
+  );
+
+  Widget
+      buildHorizontalTimelineWithDefaultIndicatorExceedingTileSizeWithoutPadding() {
+    return buildTimelineTile(
+      TimelineTile(
+        axis: TimelineAxis.horizontal,
+        alignment: TimelineAlign.center,
+        indicatorStyle: const IndicatorStyle(
+          width: 120,
+          height: 120,
+        ),
+        isLast: true,
+        endChild: Container(color: Colors.green),
+        startChild: Container(color: Colors.green),
+      ),
+      width: 100,
+      height: 400,
+    );
+  }
+
+  testWidgets(
+    'GoldenTest - Horizontal timeline with default indicator exceeding tile size without padding',
+    (WidgetTester tester) async {
+      final widget =
+          buildHorizontalTimelineWithDefaultIndicatorExceedingTileSizeWithoutPadding();
+      await tester.pumpWidget(widget);
+
+      await expectLater(
+        find.byType(TimelineTile),
+        matchesGoldenFile(
+            'golden/horizontalTimelineWithDefaultIndicatorExceedingTileSizeWithoutPadding.png'),
       );
     },
   );
