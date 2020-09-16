@@ -250,10 +250,10 @@ packages:
   timeline_tile:
     dependency: "direct main"
     description:
-      path: "/Users/JHBitencourt/Documents/senai/ferramentas/fontes/mobile/timeline_tile"
-      relative: false
+      path: ".."
+      relative: true
     source: path
-    version: "0.1.2"
+    version: "1.0.0"
   typed_data:
     dependency: transitive
     description:
