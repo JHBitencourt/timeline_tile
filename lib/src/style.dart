@@ -51,7 +51,7 @@ class IndicatorStyle {
   final double indicatorXY;
 
   /// If the line must not be drawn behind the icon. If true, there will be a gap
-  /// even if the vertical padding is 0. It defaults to false.
+  /// even if the vertical/horizontal padding is 0. It defaults to false.
   final bool drawGap;
 
   /// The total indicator height, including padding.

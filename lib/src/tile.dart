@@ -445,7 +445,7 @@ class _TimelinePainter extends CustomPainter {
   final bool isLast;
 
   /// If there must be a gap between the lines. The gap size will always be the
-  /// [indicatorHeight] + [indicatorStartGap] + [indicatorEndGap].
+  /// [indicatorSize] + [indicatorStartGap] + [indicatorEndGap].
   final bool drawGap;
 
   /// The icon rendered with the default indicator.
@@ -531,12 +531,12 @@ class _TimelinePainter extends CustomPainter {
       final endTopLine = axis == TimelineAxis.vertical
           ? Offset(
               centerAxis,
-              paintIndicator
+              paintIndicator || !drawGap
                   ? position.objectSpace.center
                   : position.firstSpace.end,
             )
           : Offset(
-              paintIndicator
+              paintIndicator || !drawGap
                   ? position.objectSpace.center
                   : position.firstSpace.end,
               centerAxis,
@@ -548,12 +548,12 @@ class _TimelinePainter extends CustomPainter {
       final beginBottomLine = axis == TimelineAxis.vertical
           ? Offset(
               centerAxis,
-              paintIndicator
+              paintIndicator || !drawGap
                   ? position.objectSpace.center
                   : position.objectSpace.end,
             )
           : Offset(
-              paintIndicator
+              paintIndicator || !drawGap
                   ? position.objectSpace.center
                   : position.objectSpace.end,
               centerAxis,
