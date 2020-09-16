@@ -12,9 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  timeline_tile:
-    path: ../
-
+  timeline_tile: ^1.0.0
   google_fonts: ^1.1.0
   flutter_highlight: ^0.6.0
 
