@@ -6,8 +6,7 @@ import '../showcase_timeline.dart';
 const example9 = Example(
   name: "Customize the tile's line.",
   description:
-      'With LineStyle you can customize both topLine and bottomLine.',
-  child: Example9(),
+      'With LineStyle you can customize both beforeLine and afterLine.',
   code: '''
 return Container(
   color: Colors.white,
@@ -21,11 +20,11 @@ return Container(
           width: 20,
           color: Colors.purple,
         ),
-        topLineStyle: const LineStyle(
+        beforeLineStyle: const LineStyle(
           color: Colors.purple,
-          width: 6,
+          thickness: 6,
         ),
-        leftChild: Container(
+        startChild: Container(
           constraints: const BoxConstraints(
             minHeight: 120,
           ),
@@ -34,13 +33,13 @@ return Container(
       ),
       TimelineTile(
         alignment: TimelineAlign.center,
-        topLineStyle: const LineStyle(
+        beforeLineStyle: const LineStyle(
           color: Colors.purple,
-          width: 6,
+          thickness: 6,
         ),
-        bottomLineStyle: const LineStyle(
+        afterLineStyle: const LineStyle(
           color: Colors.deepOrange,
-          width: 6,
+          thickness: 6,
         ),
         indicatorStyle: const IndicatorStyle(
           width: 20,
@@ -50,15 +49,15 @@ return Container(
       TimelineTile(
         alignment: TimelineAlign.center,
         isLast: true,
-        topLineStyle: const LineStyle(
+        beforeLineStyle: const LineStyle(
           color: Colors.deepOrange,
-          width: 6,
+          thickness: 6,
         ),
         indicatorStyle: const IndicatorStyle(
           width: 20,
           color: Colors.red,
         ),
-        rightChild: Container(
+        endChild: Container(
           constraints: const BoxConstraints(
             minHeight: 80,
           ),
@@ -68,11 +67,12 @@ return Container(
     ],
   ),
 );''',
+  childVertical: Example9Vertical(),
+  childHorizontal: Example9Horizontal(),
 );
 
-
-class Example9 extends StatelessWidget {
-  const Example9({Key key}) : super(key: key);
+class Example9Vertical extends StatelessWidget {
+  const Example9Vertical({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +91,11 @@ class Example9 extends StatelessWidget {
                     width: 20,
                     color: Colors.purple,
                   ),
-                  topLineStyle: const LineStyle(
+                  beforeLineStyle: const LineStyle(
                     color: Colors.purple,
-                    width: 6,
+                    thickness: 6,
                   ),
-                  leftChild: Container(
+                  startChild: Container(
                     constraints: const BoxConstraints(
                       minHeight: 120,
                     ),
@@ -104,13 +104,13 @@ class Example9 extends StatelessWidget {
                 ),
                 TimelineTile(
                   alignment: TimelineAlign.center,
-                  topLineStyle: const LineStyle(
+                  beforeLineStyle: const LineStyle(
                     color: Colors.purple,
-                    width: 6,
+                    thickness: 6,
                   ),
-                  bottomLineStyle: const LineStyle(
+                  afterLineStyle: const LineStyle(
                     color: Colors.deepOrange,
-                    width: 6,
+                    thickness: 6,
                   ),
                   indicatorStyle: const IndicatorStyle(
                     width: 20,
@@ -120,15 +120,15 @@ class Example9 extends StatelessWidget {
                 TimelineTile(
                   alignment: TimelineAlign.center,
                   isLast: true,
-                  topLineStyle: const LineStyle(
+                  beforeLineStyle: const LineStyle(
                     color: Colors.deepOrange,
-                    width: 6,
+                    thickness: 6,
                   ),
                   indicatorStyle: const IndicatorStyle(
                     width: 20,
                     color: Colors.red,
                   ),
-                  rightChild: Container(
+                  endChild: Container(
                     constraints: const BoxConstraints(
                       minHeight: 80,
                     ),
@@ -136,6 +136,86 @@ class Example9 extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Example9Horizontal extends StatelessWidget {
+  const Example9Horizontal({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        <Widget>[
+          Center(
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 160),
+              color: Colors.white,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                children: [
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.center,
+                    isFirst: true,
+                    indicatorStyle: const IndicatorStyle(
+                      height: 20,
+                      color: Colors.purple,
+                    ),
+                    beforeLineStyle: const LineStyle(
+                      color: Colors.purple,
+                      thickness: 6,
+                    ),
+                    startChild: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 120,
+                      ),
+                      color: Colors.amberAccent,
+                    ),
+                  ),
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.center,
+                    beforeLineStyle: const LineStyle(
+                      color: Colors.purple,
+                      thickness: 6,
+                    ),
+                    afterLineStyle: const LineStyle(
+                      color: Colors.deepOrange,
+                      thickness: 6,
+                    ),
+                    indicatorStyle: const IndicatorStyle(
+                      height: 20,
+                      color: Colors.cyan,
+                    ),
+                  ),
+                  TimelineTile(
+                    axis: TimelineAxis.horizontal,
+                    alignment: TimelineAlign.center,
+                    isLast: true,
+                    beforeLineStyle: const LineStyle(
+                      color: Colors.deepOrange,
+                      thickness: 6,
+                    ),
+                    indicatorStyle: const IndicatorStyle(
+                      height: 20,
+                      color: Colors.red,
+                    ),
+                    endChild: Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 80,
+                      ),
+                      color: Colors.lightGreenAccent,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

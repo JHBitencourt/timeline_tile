@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timeline_tile/src/tile.dart';
 
 /// This is a port from the original [Divider].
 /// Except that this one allows to define the start and end
@@ -6,11 +7,9 @@ import 'package:flutter/material.dart';
 /// from 0.0 to 1.0
 class TimelineDivider extends StatelessWidget {
   /// Creates a material design divider that can be used in conjunction to [TimelineTile].
-  ///
-  /// The [height], [thickness], [indent], and [endIndent] must be null or
-  /// non-negative.
   const TimelineDivider({
     Key key,
+    this.axis = TimelineAxis.horizontal,
     this.thickness = 2,
     this.begin = 0.0,
     this.end = 1.0,
@@ -22,6 +21,11 @@ class TimelineDivider extends StatelessWidget {
             'The end value must be between 0.0 and 1.0'),
         assert(end > begin, 'The end value must be bigger than the begin'),
         super(key: key);
+
+  /// The axis used to render the line at the [TimelineAxis.vertical]
+  /// or [TimelineAxis.horizontal]. Usually, the opposite axis from the tiles.
+  /// It defaults to [TimelineAxis.horizontal].
+  final TimelineAxis axis;
 
   /// The thickness of the line drawn within the divider.
   ///
@@ -49,23 +53,46 @@ class TimelineDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double width = constraints.maxWidth;
-        final double beginX = width * begin;
-        final double endX = width * end;
         final double halfThickness = thickness / 2;
+
+        EdgeInsetsDirectional margin;
+        if (axis == TimelineAxis.horizontal) {
+          final double width = constraints.maxWidth;
+          final double beginX = width * begin;
+          final double endX = width * end;
+
+          margin = EdgeInsetsDirectional.only(
+            start: beginX - halfThickness,
+            end: width - endX - halfThickness,
+          );
+        } else {
+          final double height = constraints.maxHeight;
+          final double beginY = height * begin;
+          final double endY = height * end;
+
+          margin = EdgeInsetsDirectional.only(
+            top: beginY - halfThickness,
+            bottom: height - endY - halfThickness,
+          );
+        }
 
         return Container(
           height: thickness,
-          margin: EdgeInsetsDirectional.only(
-            start: beginX - halfThickness,
-            end: width - endX - halfThickness,
-          ),
+          margin: margin,
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(
-                color: color,
-                width: thickness,
-              ),
+              left: axis == TimelineAxis.vertical
+                  ? BorderSide(
+                      color: color,
+                      width: thickness,
+                    )
+                  : BorderSide.none,
+              bottom: axis == TimelineAxis.horizontal
+                  ? BorderSide(
+                      color: color,
+                      width: thickness,
+                    )
+                  : BorderSide.none,
             ),
           ),
         );

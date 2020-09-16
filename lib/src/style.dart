@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:timeline_tile/src/tile.dart';
 
 /// Used to customize the indicator from the line.
 class IndicatorStyle {
   const IndicatorStyle({
-    @required this.width,
+    this.width = 20,
+    this.height = 20,
     this.indicator,
     this.padding = const EdgeInsets.all(0),
-    this.height = 20,
     this.color = Colors.grey,
     this.iconStyle,
-    this.indicatorY = 0.5,
+    this.indicatorXY = 0.5,
     this.drawGap = false,
-  }) : assert(width != null && width >= 0,
-            'The width must be provided and bigger than 0.0');
+  })  : assert(width != null && width >= 0,
+            'The width must be provided and bigger than 0.0'),
+        assert(height != null && height >= 0,
+            'The height must be provided and bigger than 0.0');
 
-  /// The width from the indicator
+  /// The width from the indicator.
+  /// It defaults to 20.
+  /// Ignored in case the default indicator is rendered and the tile axis
+  /// is [TimelineAxis.horizontal].
   final double width;
+
+  /// The height from the indicator.
+  /// It defaults to 20.
+  /// Ignored in case the default indicator is rendered and the tile axis
+  /// is [TimelineAxis.vertical].
+  final double height;
 
   /// A custom widget to use as indicator. if not provided it will be rendered a
   /// default circle as indicator.
@@ -23,10 +35,6 @@ class IndicatorStyle {
 
   /// The padding used with the indicator. It defaults to 0.
   final EdgeInsets padding;
-
-  /// The height from the indicator. Ignored in case the default indicator is rendered.
-  /// It defaults to 20.
-  final double height;
 
   /// The color used to paint the default indicator. It defaults to ([Colors.grey]).
   final Color color;
@@ -37,13 +45,20 @@ class IndicatorStyle {
   final IconStyle iconStyle;
 
   /// Value from 0.0 to 1.0 indicating the percentage in which the indicator
-  /// should be positioned on the line, starting from the top.
-  /// For example, 0.2 means 20% from top to bottom. It defaults to 0.5.
-  final double indicatorY;
+  /// should be positioned on the line, either on Y if [TimelineAxis.vertical]
+  /// or X if [TimelineAxis.horizontal].
+  /// For example, 0.2 means 20% from start to end. It defaults to 0.5.
+  final double indicatorXY;
 
   /// If the line must not be drawn behind the icon. If true, there will be a gap
-  /// even if the vertical padding is 0. It defaults to false.
+  /// even if the vertical/horizontal padding is 0. It defaults to false.
   final bool drawGap;
+
+  /// The total indicator height, including padding.
+  double get totalHeight => height + padding.top + padding.bottom;
+
+  /// The total indicator width, including padding.
+  double get totalWidth => width + padding.left + padding.right;
 }
 
 /// Used to customize the icon used with the default indicator.
@@ -69,13 +84,13 @@ class IconStyle {
 class LineStyle {
   const LineStyle({
     this.color = Colors.grey,
-    this.width = 4,
+    this.thickness = 4,
   });
 
   /// The color used to paint the line. It defaults to ([Colors.grey]).
   final Color color;
 
-  /// The width from the line. It can't be bigger than ([IndicatorStyle.width])
-  /// and defaults to 10.
-  final double width;
+  /// The thickness from the line. It can't be bigger than ([IndicatorStyle.width])
+  /// and defaults to 4.
+  final double thickness;
 }
