@@ -7,9 +7,9 @@ import 'package:flutter/foundation.dart';
 @immutable
 class AxisPosition {
   const AxisPosition({
-    @required this.firstSpace,
-    @required this.objectSpace,
-    @required this.secondSpace,
+    required this.firstSpace,
+    required this.objectSpace,
+    required this.secondSpace,
   });
 
   final AxisCoordinates firstSpace;
@@ -44,8 +44,8 @@ class AxisPosition {
 @immutable
 class AxisCoordinates {
   const AxisCoordinates({
-    @required this.start,
-    @required this.end,
+    required this.start,
+    required this.end,
   })  : size = end - start,
         assert(
           end >= start,
@@ -90,11 +90,11 @@ class AxisCoordinates {
 /// If the object exceed the [totalSize] at the top or the bottom, it will
 /// be aligned at the start or at the end with [_alignObject].
 AxisPosition calculateAxisPositioning({
-  @required double totalSize,
-  @required double objectSize,
-  @required double axisPosition,
+  required double totalSize,
+  required double objectSize,
+  required double axisPosition,
 }) {
-  if (axisPosition == null || axisPosition < 0.0 || axisPosition > 1.0) {
+  if (axisPosition < 0.0 || axisPosition > 1.0) {
     throw AssertionError('The axisPosition must be provided and must be a value'
         ' between 0.0 and 1.0 inclusive');
   }
@@ -134,8 +134,8 @@ AxisPosition calculateAxisPositioning({
 }
 
 AxisPosition _alignObject({
-  @required double totalSize,
-  @required double objectSize,
+  required double totalSize,
+  required double objectSize,
   bool alignStart = false,
   bool alignEnd = false,
 }) {

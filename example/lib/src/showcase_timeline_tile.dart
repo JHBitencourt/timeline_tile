@@ -79,7 +79,7 @@ class ShowcaseTimelineTile extends StatelessWidget {
 }
 
 class _IndicatorExample extends StatelessWidget {
-  const _IndicatorExample({Key key, this.number}) : super(key: key);
+  const _IndicatorExample({Key? key, required this.number}) : super(key: key);
 
   final String number;
 
@@ -106,7 +106,7 @@ class _IndicatorExample extends StatelessWidget {
 }
 
 class _RowExample extends StatelessWidget {
-  const _RowExample({Key key, this.example}) : super(key: key);
+  const _RowExample({Key? key, required this.example}) : super(key: key);
 
   final Example example;
 

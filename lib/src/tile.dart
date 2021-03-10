@@ -37,7 +37,7 @@ enum TimelineAlign {
 /// A tile that renders a timeline format.
 class TimelineTile extends StatelessWidget {
   const TimelineTile({
-    Key key,
+    Key? key,
     this.axis = TimelineAxis.vertical,
     this.alignment = TimelineAlign.start,
     this.startChild,
@@ -48,7 +48,7 @@ class TimelineTile extends StatelessWidget {
     this.isLast = false,
     this.indicatorStyle = const IndicatorStyle(width: 25),
     this.beforeLineStyle = const LineStyle(),
-    LineStyle afterLineStyle,
+    LineStyle? afterLineStyle,
   })  : afterLineStyle = afterLineStyle ?? beforeLineStyle,
         assert(alignment != TimelineAlign.start || startChild == null,
             'Cannot provide startChild with automatic alignment to the left'),
@@ -70,15 +70,15 @@ class TimelineTile extends StatelessWidget {
   final TimelineAlign alignment;
 
   /// The child widget positioned at the start
-  final Widget startChild;
+  final Widget? startChild;
 
   /// The child widget positioned at the end
-  final Widget endChild;
+  final Widget? endChild;
 
   /// The X (in case of [TimelineAxis.vertical]) or Y (in case of [TimelineAxis.horizontal])
   /// axis value used to position the line when [TimelineAlign.manual].
   /// Must be a value from 0.0 to 1.0
-  final double lineXY;
+  final double? lineXY;
 
   /// Whether it should have an indicator (default or custom).
   /// It defaults to true.
@@ -99,7 +99,7 @@ class TimelineTile extends StatelessWidget {
   final LineStyle beforeLineStyle;
 
   /// The style used to customize the line rendered after the indicator.
-  /// If null, it defaults to [topLineStyle].
+  /// If null, it defaults to [beforeLineStyle].
   final LineStyle afterLineStyle;
 
   @override
@@ -126,7 +126,7 @@ class TimelineTile extends StatelessWidget {
           _Indicator(
             axis: axis,
             beforeLineStyle: beforeLineStyle,
-            afterLineStyle: afterLineStyle ?? beforeLineStyle,
+            afterLineStyle: afterLineStyle,
             indicatorStyle: indicatorStyle,
             hasIndicator: hasIndicator,
             isLast: isLast,
@@ -148,7 +148,7 @@ class TimelineTile extends StatelessWidget {
           children.insert(0, Expanded(child: startChild ?? defaultChild));
         } else {
           final indicatorAxisXY =
-              alignment == TimelineAlign.center ? 0.5 : lineXY;
+              alignment == TimelineAlign.center ? 0.5 : lineXY!;
           final indicatorTotalSize = _indicatorTotalSize();
 
           final positioning = calculateAxisPositioning(
@@ -225,13 +225,13 @@ class TimelineTile extends StatelessWidget {
 
 class _Indicator extends StatelessWidget {
   const _Indicator({
-    this.axis,
-    this.beforeLineStyle,
-    this.afterLineStyle,
-    this.indicatorStyle,
-    this.hasIndicator,
-    this.isFirst,
-    this.isLast,
+    required this.axis,
+    required this.beforeLineStyle,
+    required this.afterLineStyle,
+    required this.indicatorStyle,
+    required this.hasIndicator,
+    required this.isFirst,
+    required this.isLast,
   });
 
   /// See [TimelineTile.axis]
@@ -358,14 +358,14 @@ class _Indicator extends StatelessWidget {
 /// A custom painter that renders a line and an indicator
 class _TimelinePainter extends CustomPainter {
   _TimelinePainter({
-    this.axis,
+    required this.axis,
     this.paintIndicator = true,
     this.isFirst = false,
     this.isLast = false,
-    IndicatorStyle indicatorStyle,
-    LineStyle beforeLineStyle,
-    LineStyle afterLineStyle,
-  })  : beforeLinePaint = Paint()
+    required IndicatorStyle indicatorStyle,
+    required LineStyle beforeLineStyle,
+    required LineStyle afterLineStyle,
+  })   : beforeLinePaint = Paint()
           ..color = beforeLineStyle.color
           ..strokeWidth = beforeLineStyle.thickness,
         afterLinePaint = Paint()
@@ -393,13 +393,13 @@ class _TimelinePainter extends CustomPainter {
             : indicatorStyle.padding.right,
         drawGap = indicatorStyle.drawGap,
         iconData = indicatorStyle.iconStyle != null
-            ? indicatorStyle.iconStyle.iconData
+            ? indicatorStyle.iconStyle?.iconData
             : null,
         iconColor = indicatorStyle.iconStyle != null
-            ? indicatorStyle.iconStyle.color
+            ? indicatorStyle.iconStyle?.color
             : null,
         iconSize = indicatorStyle.iconStyle != null
-            ? indicatorStyle.iconStyle.fontSize
+            ? indicatorStyle.iconStyle?.fontSize
             : null;
 
   /// The axis used to render the line at the [TimelineAxis.vertical]
@@ -431,7 +431,7 @@ class _TimelinePainter extends CustomPainter {
   final Paint afterLinePaint;
 
   /// Used to paint the indicator
-  final Paint indicatorPaint;
+  final Paint? indicatorPaint;
 
   /// Whether it should paint a default indicator. It defaults to true.
   final bool paintIndicator;
@@ -449,13 +449,13 @@ class _TimelinePainter extends CustomPainter {
   final bool drawGap;
 
   /// The icon rendered with the default indicator.
-  final IconData iconData;
+  final IconData? iconData;
 
   /// The icon color.
-  final Color iconColor;
+  final Color? iconColor;
 
   /// The icon size. If not provided, the size will be adjusted according to [indicatorRadius].
-  final double iconSize;
+  final double? iconSize;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -491,20 +491,20 @@ class _TimelinePainter extends CustomPainter {
       final indicatorCenter = axis == TimelineAxis.vertical
           ? Offset(centerAxis, indicatorCenterPoint)
           : Offset(indicatorCenterPoint, centerAxis);
-      canvas.drawCircle(indicatorCenter, indicatorRadius, indicatorPaint);
+      canvas.drawCircle(indicatorCenter, indicatorRadius, indicatorPaint!);
 
       if (iconData != null) {
         var fontSize = iconSize;
         fontSize ??= (indicatorRadius * 2) - 10;
 
         final builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-          fontFamily: iconData.fontFamily,
+          fontFamily: iconData!.fontFamily,
         ));
         builder.pushStyle(ui.TextStyle(
           fontSize: fontSize,
           color: iconColor,
         ));
-        builder.addText(String.fromCharCode(iconData.codePoint));
+        builder.addText(String.fromCharCode(iconData!.codePoint));
 
         final paragraph = builder.build();
         paragraph.layout(const ui.ParagraphConstraints(width: 0.0));

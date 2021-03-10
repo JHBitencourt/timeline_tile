@@ -122,7 +122,7 @@ class _Child extends StatelessWidget {
 );
 
 class Example8Vertical extends StatelessWidget {
-  const Example8Vertical({Key key}) : super(key: key);
+  const Example8Vertical({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +204,7 @@ class Example8Vertical extends StatelessWidget {
 }
 
 class Example8Horizontal extends StatelessWidget {
-  const Example8Horizontal({Key key}) : super(key: key);
+  const Example8Horizontal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -289,8 +289,8 @@ class Example8Horizontal extends StatelessWidget {
 
 class _Child extends StatelessWidget {
   const _Child({
-    Key key,
-    this.text,
+    Key? key,
+    required this.text,
     this.font = 'Shrikhand',
   }) : super(key: key);
 

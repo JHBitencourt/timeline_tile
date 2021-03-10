@@ -164,8 +164,8 @@ void main() {
 
 void assertPositioning(
   AxisPosition positioning, {
-  double totalSize,
-  AxisPosition expectedPositioning,
+  required double totalSize,
+  required AxisPosition expectedPositioning,
 }) {
   expect(totalSize, expectedPositioning.totalSize);
   expect(positioning, expectedPositioning);

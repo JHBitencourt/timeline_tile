@@ -15,7 +15,7 @@ import 'example/example_8.dart';
 import 'example/example_9.dart';
 
 class ShowcaseTimeline extends StatelessWidget {
-  const ShowcaseTimeline({Key key, this.example}) : super(key: key);
+  const ShowcaseTimeline({Key? key, required this.example}) : super(key: key);
 
   final Example example;
 
@@ -99,7 +99,7 @@ class ShowcaseTimeline extends StatelessWidget {
 }
 
 class _Code extends StatelessWidget {
-  const _Code({Key key, this.code}) : super(key: key);
+  const _Code({Key? key, required this.code}) : super(key: key);
 
   final String code;
 
@@ -115,9 +115,9 @@ class _Code extends StatelessWidget {
 
 class _Description extends StatelessWidget {
   const _Description({
-    Key key,
-    this.description,
-    this.code,
+    Key? key,
+    required this.description,
+    required this.code,
   }) : super(key: key);
 
   final String description;
@@ -156,7 +156,10 @@ class _Description extends StatelessWidget {
               ),
               children: <Widget>[
                 _Code(code: code),
-                OutlineButton(
+                OutlinedButton(
+                  onPressed: () {
+                    showCodeDialog(context);
+                  },
                   child: Text(
                     'FULL SCREEN',
                     style: GoogleFonts.lato(
@@ -164,14 +167,15 @@ class _Description extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  borderSide: BorderSide(
-                    color: Colors.white.withOpacity(0.7),
-                    width: 2,
+                  style: ButtonStyle(
+                    side: MaterialStateProperty.all(
+                      BorderSide(
+                        color: Colors.white.withOpacity(0.7),
+                        width: 2,
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    showCodeDialog(context);
-                  },
-                )
+                ),
               ],
             ),
           ),
@@ -196,11 +200,11 @@ class _Description extends StatelessWidget {
 
 class Example {
   const Example({
-    this.name,
-    this.description,
-    this.code,
-    this.childHorizontal,
-    this.childVertical,
+    required this.name,
+    required this.description,
+    required this.code,
+    required this.childHorizontal,
+    required this.childVertical,
   });
 
   final String name;

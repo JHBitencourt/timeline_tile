@@ -8,7 +8,7 @@ import 'package:timeline_tile/src/tile.dart';
 class TimelineDivider extends StatelessWidget {
   /// Creates a material design divider that can be used in conjunction to [TimelineTile].
   const TimelineDivider({
-    Key key,
+    Key? key,
     this.axis = TimelineAxis.horizontal,
     this.thickness = 2,
     this.begin = 0.0,
