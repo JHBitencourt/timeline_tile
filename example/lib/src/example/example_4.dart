@@ -27,7 +27,7 @@ return Container(
 );
 
 class Example4Vertical extends StatelessWidget {
-  const Example4Vertical({Key key}) : super(key: key);
+  const Example4Vertical({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class Example4Vertical extends StatelessWidget {
 }
 
 class Example4Horizontal extends StatelessWidget {
-  const Example4Horizontal({Key key}) : super(key: key);
+  const Example4Horizontal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

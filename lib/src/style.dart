@@ -12,9 +12,9 @@ class IndicatorStyle {
     this.iconStyle,
     this.indicatorXY = 0.5,
     this.drawGap = false,
-  })  : assert(width != null && width >= 0,
+  })  : assert(width >= 0,
             'The width must be provided and bigger than 0.0'),
-        assert(height != null && height >= 0,
+        assert(height >= 0,
             'The height must be provided and bigger than 0.0');
 
   /// The width from the indicator.
@@ -31,7 +31,7 @@ class IndicatorStyle {
 
   /// A custom widget to use as indicator. if not provided it will be rendered a
   /// default circle as indicator.
-  final Widget indicator;
+  final Widget? indicator;
 
   /// The padding used with the indicator. It defaults to 0.
   final EdgeInsets padding;
@@ -42,7 +42,7 @@ class IndicatorStyle {
   /// The style of the icon used inside the default indicator, if any.
   /// It will only be used with the default indicator, and ignored in case there
   /// is a custom indicator provided.
-  final IconStyle iconStyle;
+  final IconStyle? iconStyle;
 
   /// Value from 0.0 to 1.0 indicating the percentage in which the indicator
   /// should be positioned on the line, either on Y if [TimelineAxis.vertical]
@@ -64,10 +64,10 @@ class IndicatorStyle {
 /// Used to customize the icon used with the default indicator.
 class IconStyle {
   IconStyle({
-    @required this.iconData,
+    required this.iconData,
     this.color = Colors.black,
     this.fontSize,
-  }) : assert(iconData != null, 'The iconData must be provided');
+  });
 
   /// The icon to render.
   final IconData iconData;
@@ -77,7 +77,7 @@ class IconStyle {
 
   /// The fontSize from the line. If not provided, it will try to adjust the
   /// icon size based on the default indicator size. According to ([IndicatorStyle.width]).
-  final double fontSize;
+  final double? fontSize;
 }
 
 /// Used to customize the line
