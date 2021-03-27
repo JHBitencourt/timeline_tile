@@ -104,6 +104,10 @@ class TimelineTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    /// This used for detect current direction of layout
+    final bool isRTL = Directionality.of(context) == TextDirection.rtl;
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         double startCrossAxisSpace = 0;
@@ -129,8 +133,8 @@ class TimelineTile extends StatelessWidget {
             afterLineStyle: afterLineStyle,
             indicatorStyle: indicatorStyle,
             hasIndicator: hasIndicator,
-            isLast: isLast,
-            isFirst: isFirst,
+            isLast: isRTL ? isFirst : isLast,
+            isFirst: isRTL ? isLast : isFirst,
           ),
           if (endCrossAxisSpace > 0)
             SizedBox(
