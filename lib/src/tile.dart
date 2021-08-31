@@ -46,6 +46,9 @@ class TimelineTile extends StatelessWidget {
     this.hasIndicator = true,
     this.isFirst = false,
     this.isLast = false,
+    this.isDotted = false,
+    this.dashWidth = 9.0,
+    this.dashSpace = 5.0,
     this.indicatorStyle = const IndicatorStyle(width: 25),
     this.beforeLineStyle = const LineStyle(),
     LineStyle? afterLineStyle,
@@ -64,6 +67,16 @@ class TimelineTile extends StatelessWidget {
   /// The axis used on the tile. See [TimelineAxis].
   /// It defaults to [TimelineAxis.vertical]
   final TimelineAxis axis;
+
+  ///True if the line is dotted.
+  ///It defaults to false
+  final bool isDotted;
+
+  ///Sets the width of the dashed line. Defaults to 9.
+  final double dashWidth;
+
+  ///Sets the space between the dashed lines. Defaults to 5
+  final double dashSpace;
 
   /// The alignment used on the line. See [TimelineAlign].
   /// It defaults to [TimelineAlign.start]
@@ -125,12 +138,15 @@ class TimelineTile extends StatelessWidget {
             ),
           _Indicator(
             axis: axis,
+            isDotted: isDotted,
             beforeLineStyle: beforeLineStyle,
             afterLineStyle: afterLineStyle,
             indicatorStyle: indicatorStyle,
             hasIndicator: hasIndicator,
             isLast: isLast,
             isFirst: isFirst,
+            dashSpace: dashSpace,
+            dashWidth: dashWidth,
           ),
           if (endCrossAxisSpace > 0)
             SizedBox(
@@ -232,10 +248,19 @@ class _Indicator extends StatelessWidget {
     required this.hasIndicator,
     required this.isFirst,
     required this.isLast,
+    required this.isDotted,
+    required this.dashSpace,
+    required this.dashWidth,
   });
 
   /// See [TimelineTile.axis]
   final TimelineAxis axis;
+
+  final bool isDotted;
+
+  final double dashWidth;
+
+  final double dashSpace;
 
   /// See [TimelineTile.beforeLineStyle]
   final LineStyle beforeLineStyle;
@@ -291,6 +316,9 @@ class _Indicator extends StatelessWidget {
       paintIndicator: renderDefaultIndicator,
       isFirst: isFirst,
       isLast: isLast,
+      isDotted: isDotted,
+      dashSpace: dashSpace,
+      dashWidth: dashWidth,
     );
 
     return CustomPaint(
@@ -362,14 +390,19 @@ class _TimelinePainter extends CustomPainter {
     this.paintIndicator = true,
     this.isFirst = false,
     this.isLast = false,
+    required this.isDotted,
+    required this.dashWidth,
+    required this.dashSpace,
     required IndicatorStyle indicatorStyle,
     required LineStyle beforeLineStyle,
     required LineStyle afterLineStyle,
   })   : beforeLinePaint = Paint()
           ..color = beforeLineStyle.color
+          // ..color = Colors.red
           ..strokeWidth = beforeLineStyle.thickness,
         afterLinePaint = Paint()
           ..color = afterLineStyle.color
+          // ..color = Colors.blue
           ..strokeWidth = afterLineStyle.thickness,
         indicatorPaint =
             !paintIndicator ? null : (Paint()..color = indicatorStyle.color),
@@ -401,10 +434,12 @@ class _TimelinePainter extends CustomPainter {
         iconSize = indicatorStyle.iconStyle != null
             ? indicatorStyle.iconStyle?.fontSize
             : null;
-
   /// The axis used to render the line at the [TimelineAxis.vertical]
   /// or [TimelineAxis.horizontal].
   final TimelineAxis axis;
+
+  final bool isDotted;
+  final double dashWidth, dashSpace;
 
   /// Value from 0.0 to 1.0 indicating the percentage in which the indicator
   /// should be positioned on the line, either on Y if [TimelineAxis.vertical]
@@ -541,7 +576,26 @@ class _TimelinePainter extends CustomPainter {
                   : position.firstSpace.end,
               centerAxis,
             );
-      canvas.drawLine(beginTopLine, endTopLine, beforeLinePaint);
+
+      if (isDotted) {
+        if ( axis == TimelineAxis.vertical ) {
+          double startY = 0;
+          while (startY <= endTopLine.dy - dashSpace / 2) {
+            canvas.drawLine(Offset(centerAxis, startY),
+                Offset(centerAxis, startY + dashWidth), beforeLinePaint);
+            startY += dashWidth + dashSpace;
+          }
+        } else {
+          double startX = 0;
+          while (startX <= endTopLine.dx - dashSpace / 2) {
+            canvas.drawLine(Offset(startX, centerAxis),
+                Offset(startX + dashWidth, centerAxis), beforeLinePaint);
+            startX += dashWidth + dashSpace;
+          }
+        }
+      } else {
+        canvas.drawLine(beginTopLine, endTopLine, beforeLinePaint);
+      }
     }
 
     if (!isLast) {
@@ -561,7 +615,25 @@ class _TimelinePainter extends CustomPainter {
       final endBottomLine = axis == TimelineAxis.vertical
           ? Offset(centerAxis, position.secondSpace.end)
           : Offset(position.secondSpace.end, centerAxis);
-      canvas.drawLine(beginBottomLine, endBottomLine, afterLinePaint);
+
+      if(isDotted == true) {
+        if(axis == TimelineAxis.vertical) {
+          double startY = beginBottomLine.dy;
+
+          while (startY <= endBottomLine.dy - (dashWidth + dashSpace)) {
+            canvas.drawLine(Offset(centerAxis, startY), Offset(centerAxis, startY+dashWidth), afterLinePaint);
+            startY += dashWidth + dashSpace;
+          }
+        } else {
+          double startX = beginBottomLine.dx;
+          while (startX <= beginBottomLine.dx - (dashWidth + dashSpace)) {
+            canvas.drawLine(Offset(startX, centerAxis), Offset(startX+dashWidth, centerAxis), afterLinePaint);
+            startX += dashWidth + dashSpace;
+          }
+        }
+      } else {
+        canvas.drawLine(beginBottomLine, endBottomLine, afterLinePaint);
+      }
     }
   }
 
@@ -577,12 +649,30 @@ class _TimelinePainter extends CustomPainter {
     final lineSize =
         axis == TimelineAxis.vertical ? endTopLine.dy : endTopLine.dx;
     // if the line size is less or equal than 0, the line shouldn't be rendered
-    if (lineSize > 0) {
-      canvas.drawLine(beginTopLine, endTopLine, beforeLinePaint);
+    if (lineSize>0) {
+      if (isDotted) {
+        if(axis == TimelineAxis.vertical) {
+          double startY = 0;
+          while (startY <= endTopLine.dy-dashSpace/2) {
+            canvas.drawLine(Offset(centerAxis, startY), Offset(centerAxis, startY+dashWidth), beforeLinePaint);
+            startY += dashWidth + dashSpace;
+          }
+        } else {
+          double startX = 0;
+          while (startX <= endTopLine.dx-dashSpace/2) {
+            canvas.drawLine(Offset(startX, centerAxis), Offset(startX+dashWidth ,centerAxis), beforeLinePaint);
+            startX += dashWidth + dashSpace;
+          }
+        }
+      } else {
+        canvas.drawLine(beginTopLine, endTopLine, beforeLinePaint);
+      }
     }
   }
 
   void _drawAfterLine(Canvas canvas, double centerAxis, AxisPosition position) {
+
+
     final beginBottomLine = axis == TimelineAxis.vertical
         ? Offset(centerAxis, position.secondSpace.start)
         : Offset(position.secondSpace.start, centerAxis);
@@ -594,8 +684,26 @@ class _TimelinePainter extends CustomPainter {
         ? endBottomLine.dy - beginBottomLine.dy
         : endBottomLine.dx - beginBottomLine.dx;
     // if the line size is less or equal than 0, the line shouldn't be rendered
-    if (lineSize > 0) {
-      canvas.drawLine(beginBottomLine, endBottomLine, afterLinePaint);
+    if (lineSize>0) {
+      if(isDotted == true) {
+        if(axis == TimelineAxis.vertical) {
+          double startY = beginBottomLine.dy;
+
+          while (startY <= endBottomLine.dy - (dashWidth + dashSpace)) {
+            canvas.drawLine(Offset(centerAxis, startY), Offset(centerAxis, startY+dashWidth), afterLinePaint);
+            startY += dashWidth + dashSpace;
+          }
+        } else {
+          double startX = beginBottomLine.dx;
+          while (startX <= beginBottomLine.dx - (dashWidth + dashSpace)) {
+            canvas.drawLine(Offset(startX, centerAxis), Offset(startX+dashWidth, centerAxis), afterLinePaint);
+            startX += dashWidth + dashSpace;
+          }
+        }
+      } else {
+        canvas.drawLine(beginBottomLine, endBottomLine, afterLinePaint);
+      }
     }
   }
 }
+

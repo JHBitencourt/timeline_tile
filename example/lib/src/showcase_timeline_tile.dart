@@ -40,6 +40,7 @@ class ShowcaseTimelineTile extends StatelessWidget {
                       final example = examples[index];
 
                       return TimelineTile(
+                        isDotted: true,
                         alignment: TimelineAlign.manual,
                         lineXY: 0.1,
                         isFirst: index == 0,
