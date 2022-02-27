@@ -6,7 +6,7 @@ homepage: https://github.com/JHBitencourt/timeline_tile
 issue_tracker: https://github.com/JHBitencourt/timeline_tile/issues
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
   flutter:
