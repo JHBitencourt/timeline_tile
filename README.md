@@ -163,7 +163,7 @@ TimelineTile(
 
 ### Is it the first or the last?
 
-You can decide if a tile is the first os the last in a timeline. This way you control whether a `before` or `after` line must be rendered.
+You can decide if a tile is the first or the last in a timeline. This way you control whether a `before` or `after` line must be rendered.
 
 ![First and last](https://raw.githubusercontent.com/JHBitencourt/timeline_tile/master/screenshots/first_and_last.png)
 
