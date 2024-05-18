@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:timeline_tile/src/tile.dart';
 
 /// Used to customize the indicator from the line.
 class IndicatorStyle {
@@ -12,10 +11,8 @@ class IndicatorStyle {
     this.iconStyle,
     this.indicatorXY = 0.5,
     this.drawGap = false,
-  })  : assert(width >= 0,
-            'The width must be provided and bigger than 0.0'),
-        assert(height >= 0,
-            'The height must be provided and bigger than 0.0');
+  })  : assert(width >= 0, 'The width must be provided and bigger than 0.0'),
+        assert(height >= 0, 'The height must be provided and bigger than 0.0');
 
   /// The width from the indicator.
   /// It defaults to 20.
@@ -85,6 +82,12 @@ class LineStyle {
   const LineStyle({
     this.color = Colors.grey,
     this.thickness = 4,
+    this.dotted = false,
+    this.dotRadius = 4.0,
+    this.dotSpacing = 10.0,
+    this.isDashed = false,
+    this.dashLength = 4.0,
+    this.dashSpacing = 4.0,
   });
 
   /// The color used to paint the line. It defaults to ([Colors.grey]).
@@ -93,4 +96,12 @@ class LineStyle {
   /// The thickness from the line. It can't be bigger than ([IndicatorStyle.width])
   /// and defaults to 4.
   final double thickness;
+
+  final bool dotted; // Flag to indicate dotted line style
+  final double dotRadius; // Length of each dash
+  final double dotSpacing; // Space between dashes
+
+  final bool isDashed;
+  final double dashLength;
+  final double dashSpacing;
 }
