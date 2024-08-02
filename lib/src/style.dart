@@ -12,10 +12,8 @@ class IndicatorStyle {
     this.iconStyle,
     this.indicatorXY = 0.5,
     this.drawGap = false,
-  })  : assert(width >= 0,
-            'The width must be provided and bigger than 0.0'),
-        assert(height >= 0,
-            'The height must be provided and bigger than 0.0');
+  })  : assert(width >= 0, 'The width must be provided and bigger than 0.0'),
+        assert(height >= 0, 'The height must be provided and bigger than 0.0');
 
   /// The width from the indicator.
   /// It defaults to 20.
@@ -59,6 +57,30 @@ class IndicatorStyle {
 
   /// The total indicator width, including padding.
   double get totalWidth => width + padding.left + padding.right;
+
+  /// Creates a copy of this [IndicatorStyle] with the given fields replaced
+  /// with the new values.
+  IndicatorStyle copyWith({
+    double? width,
+    double? height,
+    Widget? indicator,
+    EdgeInsets? padding,
+    Color? color,
+    IconStyle? iconStyle,
+    double? indicatorXY,
+    bool? drawGap,
+  }) {
+    return IndicatorStyle(
+      width: width ?? this.width,
+      height: height ?? this.height,
+      indicator: indicator ?? this.indicator,
+      padding: padding ?? this.padding,
+      color: color ?? this.color,
+      iconStyle: iconStyle ?? this.iconStyle,
+      indicatorXY: indicatorXY ?? this.indicatorXY,
+      drawGap: drawGap ?? this.drawGap,
+    );
+  }
 }
 
 /// Used to customize the icon used with the default indicator.
